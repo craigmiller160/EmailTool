@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="email-tool" default="package">
+    <path id="classpath">
+        <fileset dir="lib" includes="**/*.jar" />
+    </path>
+    <target name="clean">
+        <delete dir="build" />
+    </target>
+    <target name="prepare" depends="clean">
+        <mkdir dir="build/classes" />
+        <copy todir="build/classes">
+            <fileset dir="resources" includes="**/*" />
+        </copy>
+    </target>
+    <target name="compile" depends="prepare">
+        <javac srcdir="src" destdir="build/classes" source="1.8" target="1.8" classpathref="classpath" />
+    </target>
+    <target name="package" depends="compile">
+        <jar basedir="build/classes" destfile="build/email-tool-1.0.jar">
+            <zipgroupfileset dir="lib" includes="**/*.jar" />
+            <manifest>
+                <attribute name="Built-By" value="Craig Miller" />
+                <attribute name="Main-Class" value="io.craigmiller160.email.MassEmailer" />
+            </manifest>
+        </jar>
+    </target>
+</project>
