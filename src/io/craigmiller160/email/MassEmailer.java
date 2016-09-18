@@ -143,7 +143,7 @@ public class MassEmailer {
     }
 
     private static void introPrompts() throws Exception{
-        System.out.println("Ties That Bind Us Mass Email Tool\n\n");
+        System.out.println("Mass Email Tool\n\n");
         System.out.print("Email List File: ");
         String emailListFilePath = scanner.nextLine();
         emailListFile = new File(emailListFilePath);
