@@ -1,0 +1,10 @@
+# Properties with my email credentials
+/resources/email.properties
+
+# IntelliJ files
+/out
+.idea
+*.iml
+
+# Java files
+*.class
