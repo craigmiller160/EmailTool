@@ -8,3 +8,6 @@
 
 # Java files
 *.class
+
+# Build stuff
+/build
