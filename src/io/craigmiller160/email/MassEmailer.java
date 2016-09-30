@@ -119,9 +119,7 @@ public class MassEmailer {
         try(BufferedReader reader = new BufferedReader(new FileReader(emailMessageFile))){
             String line = null;
             while((line = reader.readLine()) != null){
-                if(!line.trim().isEmpty()){
-                    emailBodyBuilder.append(line).append("\n");
-                }
+                emailBodyBuilder.append(line).append("\n");
             }
         }
         message = emailBodyBuilder.toString();
@@ -131,8 +129,8 @@ public class MassEmailer {
         System.out.println("  " + emailListBuilder.toString());
         System.out.println("  Subject:");
         System.out.println("  " + subject);
-        System.out.println("  Message:");
-        System.out.println("  " + emailBodyBuilder.toString());
+        System.out.println("  Message:\n");
+        System.out.println(emailBodyBuilder.toString());
         System.out.println("  Attachments:");
         if(attachmentFiles.size() > 0){
             attachmentFiles.forEach((f) -> System.out.println("  " + f.getAbsolutePath()));
