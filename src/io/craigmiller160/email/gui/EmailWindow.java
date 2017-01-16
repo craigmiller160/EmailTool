@@ -3,6 +3,7 @@ package io.craigmiller160.email.gui;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by craigmiller on 1/16/17.
@@ -41,8 +42,14 @@ public class EmailWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(new JPanel(new MigLayout()));
 
+        JLabel titleLabel = new JLabel("Mass Email Tool");
+        titleLabel.setFont(Fonts.APP_TITLE_FONT);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(5,3, 5,3));
+
         JPanel contactsPanel = buildContactsPanel();
 
+        getContentPane().add(titleLabel, "dock north");
         getContentPane().add(contactsPanel, "dock north");
 
         pack();
@@ -58,6 +65,7 @@ public class EmailWindow extends JFrame {
         contactTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         contactsScrollPane = new JScrollPane(contactTable);
+        contactsScrollPane.setPreferredSize(new Dimension(600, 300));
 
         addContactBtn = new JButton("+");
         removeContactBtn = new JButton("-");
