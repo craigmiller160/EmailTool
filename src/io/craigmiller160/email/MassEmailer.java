@@ -68,7 +68,7 @@ public class MassEmailer {
         String[] sendToParts = sendTo.split(",");
         for(String s : sendToParts){
             if(!s.trim().isEmpty()){
-                mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(s));
+                mimeMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(s));
             }
         }
 
