@@ -10,21 +10,52 @@ import java.util.List;
 /**
  * Created by craig on 3/6/17.
  */
-public class SendToListModel extends AbstractListModel<String> {
+public class SendToListModel extends AbstractTableModel {
 
     private List<String> values = new ArrayList<>();
+    private String title;
+
+    public SendToListModel(String title){
+        this.title = title;
+    }
 
     public void setValues(List<String> values){
         this.values = values;
     }
 
     @Override
-    public int getSize() {
+    public int getRowCount() {
         return values.size() + 1;
     }
 
     @Override
-    public String getElementAt(int index) {
-        return index == values.size() ? "" : values.get(index);
+    public String getColumnName(int column) {
+        return title;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if(rowIndex == values.size()){
+            values.add((String) aValue);
+        }
+        else{
+            values.set(rowIndex, (String) aValue);
+        }
+        fireTableDataChanged();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 1;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return rowIndex == values.size() ? "" : values.get(rowIndex);
     }
 }
