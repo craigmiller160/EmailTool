@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class SendToModel {
 
+    public static final String TO_EMAIL_PROP = "ToEmail";
+    public static final String CC_EMAIL_PROP = "CCEmail";
+    public static final String BCC_EMAIL_PROP = "BCCEmail";
+
     private final List<String> toEmails;
     private final List<String> ccEmails;
     private final List<String> bccEmails;
@@ -40,6 +44,30 @@ public class SendToModel {
 
     public void removeBCCEmail(String email){
         this.bccEmails.remove(email);
+    }
+
+    public void removeToEmail(int index){
+        this.toEmails.remove(index);
+    }
+
+    public void removeCCEmail(int index){
+        this.ccEmails.remove(index);
+    }
+
+    public void removeBCCEmail(int index){
+        this.bccEmails.remove(index);
+    }
+
+    public void setToEmail(String email, int index){
+        this.toEmails.set(index, email);
+    }
+
+    public void setCCEmail(String email, int index){
+        this.ccEmails.set(index, email);
+    }
+
+    public void setBCCEmail(String email, int index){
+        this.bccEmails.set(index, email);
     }
 
     public int toEmailCount(){

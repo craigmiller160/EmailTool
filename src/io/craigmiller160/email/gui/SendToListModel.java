@@ -12,11 +12,19 @@ import java.util.List;
  */
 public class SendToListModel extends AbstractTableModel {
 
+    public static final String TO_TITLE = "To";
+    public static final String CC_TITLE = "CC";
+    public static final String BCC_TITLE = "BCC";
+
     private List<String> values = new ArrayList<>();
     private String title;
 
     public SendToListModel(String title){
         this.title = title;
+    }
+
+    public String getTitle(){
+        return title;
     }
 
     public void setValues(List<String> values){

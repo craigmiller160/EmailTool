@@ -6,9 +6,12 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static io.craigmiller160.email.EmailTool.EXECUTE_PROP;
 import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
@@ -62,8 +65,8 @@ public class EmailWindow extends JFrame {
     private EmailTool controller;
 
     public EmailWindow(EmailTool controller){
-        init();
         this.controller = controller;
+        init();
     }
 
     private void init(){
@@ -143,6 +146,8 @@ public class EmailWindow extends JFrame {
         JPanel sendPanel = new JPanel(new MigLayout());
 
         sendEmail = new JButton("Send Email");
+        sendEmail.setActionCommand(EXECUTE_PROP);
+        sendEmail.addActionListener(controller);
 
         sendPanel.add(sendEmail, "growx, pushx");
 
@@ -181,9 +186,9 @@ public class EmailWindow extends JFrame {
     private JPanel buildSendToPanel(){
         JPanel sendToPanel = new JPanel(new MigLayout());
 
-        toEmailModel = new SendToListModel("To");
-        ccEmailModel = new SendToListModel("CC");
-        bccEmailModel = new SendToListModel("BCC");
+        toEmailModel = new SendToListModel(SendToListModel.TO_TITLE);
+        ccEmailModel = new SendToListModel(SendToListModel.CC_TITLE);
+        bccEmailModel = new SendToListModel(SendToListModel.BCC_TITLE);
 
         toEmailList = createTable(toEmailModel);
         ccEmailList = createTable(ccEmailModel);
