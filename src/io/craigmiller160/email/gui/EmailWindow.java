@@ -3,6 +3,7 @@ package io.craigmiller160.email.gui;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class EmailWindow extends JFrame {
     }
 
     private static final int TABLE_ROW_HEIGHT = 20;
+    private static final Dimension SEND_TO_TABLE_DIMENSION = new Dimension(200, 200);
 
     /*
      * Options:
@@ -59,6 +61,7 @@ public class EmailWindow extends JFrame {
     private JTextArea body;
     private JList<String> attachments;
     private DefaultListModel<String> attachmentModel;
+    private JButton attachFile;
 
     private JButton sendEmail;
 
@@ -143,9 +146,10 @@ public class EmailWindow extends JFrame {
         JLabel attachmentsLabel = new JLabel("Attachments: ");
 
         subject = new JTextField();
-        body = new JTextArea();
+        body = new JTextArea(10, 10);
         attachmentModel = new DefaultListModel<>();
         attachments = new JList<>(attachmentModel);
+        attachFile = new JButton("Attach File");
 
         JScrollPane bodyScroll = new JScrollPane(body);
         JScrollPane attachmentScroll = new JScrollPane(attachments);
@@ -155,7 +159,8 @@ public class EmailWindow extends JFrame {
         messagePanel.add(bodyLabel, "");
         messagePanel.add(bodyScroll, "growx, pushx, wrap");
         messagePanel.add(attachmentsLabel, "");
-        messagePanel.add(attachmentScroll, "growx, pushx");
+        messagePanel.add(attachmentScroll, "growx, pushx, wrap");
+        messagePanel.add(attachFile, "skip 1");
 
         messagePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Message"));
 
@@ -172,14 +177,17 @@ public class EmailWindow extends JFrame {
         toEmailList = new JTable(toEmailModel);
         toEmailList.setRowHeight(TABLE_ROW_HEIGHT);
         toEmailList.setDefaultRenderer(String.class, new CellRenderer());
+        toEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
 
         ccEmailList = new JTable(ccEmailModel);
         ccEmailList.setRowHeight(TABLE_ROW_HEIGHT);
         ccEmailList.setDefaultRenderer(String.class, new CellRenderer());
+        ccEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
 
         bccEmailList = new JTable(bccEmailModel);
         bccEmailList.setRowHeight(TABLE_ROW_HEIGHT);
         bccEmailList.setDefaultRenderer(String.class, new CellRenderer());
+        bccEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
 
         JScrollPane toEmailScroll = new JScrollPane(toEmailList);
         JScrollPane ccEmailScroll = new JScrollPane(ccEmailList);
