@@ -42,11 +42,18 @@ public class SendToListModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if(rowIndex == values.size()){
             values.add((String) aValue);
+            fireTableRowsInserted(rowIndex, rowIndex);
         }
         else{
-            values.set(rowIndex, (String) aValue);
+            if(aValue == null || ((String) aValue).isEmpty()){
+                values.remove(rowIndex);
+                fireTableRowsDeleted(rowIndex, rowIndex);
+            }
+            else{
+                values.set(rowIndex, (String) aValue);
+                fireTableCellUpdated(rowIndex, columnIndex);
+            }
         }
-        fireTableDataChanged();
     }
 
     @Override

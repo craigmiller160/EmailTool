@@ -1,11 +1,20 @@
 package io.craigmiller160.email.gui;
 
+import io.craigmiller160.email.EmailTool;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Optional;
+
+import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
+import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
+import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
+import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
+import static io.craigmiller160.email.model.SendFromModel.START_TLS_PROP;
+import static io.craigmiller160.email.model.SendFromModel.USERNAME_PROP;
 
 /**
  * Created by craigmiller on 1/16/17.
@@ -15,21 +24,6 @@ public class EmailWindow extends JFrame {
     //TODO need cell renderer with tooltips
     //TODO add button to load emails from file
     //TODO need save/load for all configurations feature
-
-    //TODO delete this
-    public static void main(String[] args){
-        try {
-            Optional<UIManager.LookAndFeelInfo> info = Arrays.stream(UIManager.getInstalledLookAndFeels())
-                    .filter((laf) -> "Nimbus".equals(laf.getName()))
-                    .findFirst();
-            if(info.isPresent()){
-                UIManager.setLookAndFeel(info.get().getClassName());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        new EmailWindow();
-    }
 
     private static final int TABLE_ROW_HEIGHT = 20;
     private static final Dimension SEND_TO_TABLE_DIMENSION = new Dimension(200, 200);
@@ -65,8 +59,11 @@ public class EmailWindow extends JFrame {
 
     private JButton sendEmail;
 
-    public EmailWindow(){
+    private EmailTool controller;
+
+    public EmailWindow(EmailTool controller){
         init();
+        this.controller = controller;
     }
 
     private void init(){
@@ -109,10 +106,24 @@ public class EmailWindow extends JFrame {
         JLabel portLabel = new JLabel("Port: ");
 
         username = new JTextField();
+        username.getDocument().putProperty(PROP_NAME_PROP, USERNAME_PROP);
+        username.getDocument().addDocumentListener(controller);
+
         password = new JPasswordField();
+        password.getDocument().putProperty(PROP_NAME_PROP, PASSWORD_PROP);
+        password.getDocument().addDocumentListener(controller);
+
         port = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
+        port.setName(PORT_PROP);
+        port.addChangeListener(controller);
+
         auth = new JCheckBox("Use Auth");
+        auth.setName(AUTH_PROP);
+        auth.addItemListener(controller);
+
         startTLS = new JCheckBox("Start TLS");
+        startTLS.setName(START_TLS_PROP);
+        startTLS.addItemListener(controller);
 
         fromPanel.add(usernameLabel, "");
         fromPanel.add(username, "growx, pushx, wrap");
@@ -146,7 +157,7 @@ public class EmailWindow extends JFrame {
         JLabel attachmentsLabel = new JLabel("Attachments: ");
 
         subject = new JTextField();
-        body = new JTextArea(10, 10);
+        body = new JTextArea(10, 50);
         attachmentModel = new DefaultListModel<>();
         attachments = new JList<>(attachmentModel);
         attachFile = new JButton("Attach File");
@@ -174,20 +185,9 @@ public class EmailWindow extends JFrame {
         ccEmailModel = new SendToListModel("CC");
         bccEmailModel = new SendToListModel("BCC");
 
-        toEmailList = new JTable(toEmailModel);
-        toEmailList.setRowHeight(TABLE_ROW_HEIGHT);
-        toEmailList.setDefaultRenderer(String.class, new CellRenderer());
-        toEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
-
-        ccEmailList = new JTable(ccEmailModel);
-        ccEmailList.setRowHeight(TABLE_ROW_HEIGHT);
-        ccEmailList.setDefaultRenderer(String.class, new CellRenderer());
-        ccEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
-
-        bccEmailList = new JTable(bccEmailModel);
-        bccEmailList.setRowHeight(TABLE_ROW_HEIGHT);
-        bccEmailList.setDefaultRenderer(String.class, new CellRenderer());
-        bccEmailList.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
+        toEmailList = createTable(toEmailModel);
+        ccEmailList = createTable(ccEmailModel);
+        bccEmailList = createTable(bccEmailModel);
 
         JScrollPane toEmailScroll = new JScrollPane(toEmailList);
         JScrollPane ccEmailScroll = new JScrollPane(ccEmailList);
@@ -200,6 +200,15 @@ public class EmailWindow extends JFrame {
         sendToPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Send To"));
 
         return sendToPanel;
+    }
+
+    private JTable createTable(TableModel model){
+        JTable table = new JTable(model);
+        table.setRowHeight(TABLE_ROW_HEIGHT);
+        table.setDefaultRenderer(String.class, new CellRenderer());
+        table.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return table;
     }
 
 }
