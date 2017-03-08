@@ -2,6 +2,7 @@ package io.craigmiller160.email;
 
 import io.craigmiller160.email.gui.EmailWindow;
 import io.craigmiller160.email.gui.SendToListModel;
+import io.craigmiller160.email.model.MessageModel;
 import io.craigmiller160.email.model.SendFromModel;
 import io.craigmiller160.email.model.SendToModel;
 
@@ -10,6 +11,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.text.BadLocationException;
@@ -34,7 +37,7 @@ import static io.craigmiller160.email.model.SendFromModel.USERNAME_PROP;
 /**
  * Created by craig on 3/6/17.
  */
-public class EmailTool implements ActionListener, DocumentListener, TableModelListener, ItemListener, ChangeListener, PropertyChangeListener{
+public class EmailTool implements ActionListener, DocumentListener, TableModelListener, ListDataListener, ItemListener, ChangeListener, PropertyChangeListener{
 
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
@@ -61,6 +64,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
 
     private SendFromModel sendFromModel;
     private SendToModel sendToModel;
+    private MessageModel messageModel;
     private EmailWindow view;
     private volatile boolean viewIsChangingProperty = false;
 
@@ -74,6 +78,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
 
         this.sendToModel = new SendToModel();
         this.sendFromModel.addPropertyChangeListener(this);
+
+        this.messageModel = new MessageModel();
+        this.messageModel.addPropertyChangeListener(this);
 
         this.view = new EmailWindow(this);
     }
@@ -117,42 +124,64 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     }
 
     @Override
+    public void intervalAdded(ListDataEvent event) {
+        int index = event.getIndex0();
+        DefaultListModel<String> source = (DefaultListModel<String>) event.getSource();
+        String value = source.getElementAt(index);
+        messageModel.addAttachment(value);
+    }
+
+    @Override
+    public void intervalRemoved(ListDataEvent event) {
+        int index = event.getIndex0();
+        messageModel.removeAttachment(index);
+    }
+
+    @Override
+    public void contentsChanged(ListDataEvent event) {
+        int index = event.getIndex0();
+        DefaultListModel<String> source = (DefaultListModel<String>) event.getSource();
+        String value = source.getElementAt(index);
+        messageModel.updateAttachment(value, index);
+    }
+
+    @Override
     public void tableChanged(TableModelEvent event) {
         Object source = event.getSource();
         if(source instanceof SendToListModel){
-            SendToListModel model = (SendToListModel) source;
-            String title = model.getTitle();
+            SendToListModel tableModel = (SendToListModel) source;
+            String title = tableModel.getTitle();
             if(TO_TITLE.equals(title)){
                 if(event.getType() == TableModelEvent.INSERT){
-
+                    sendToModel.addToEmail((String)tableModel.getValueAt(event.getFirstRow(), 0));
                 }
                 else if(event.getType() == TableModelEvent.DELETE){
-
+                    sendToModel.removeToEmail(event.getFirstRow());
                 }
                 else if(event.getType() == TableModelEvent.UPDATE){
-
+                    sendToModel.updateToEmail((String) tableModel.getValueAt(event.getFirstRow(), 0), event.getFirstRow());
                 }
             }
             else if(CC_TITLE.equals(title)){
                 if(event.getType() == TableModelEvent.INSERT){
-
+                    sendToModel.addCCEmail((String)tableModel.getValueAt(event.getFirstRow(), 0));
                 }
                 else if(event.getType() == TableModelEvent.DELETE){
-
+                    sendToModel.removeCCEmail(event.getFirstRow());
                 }
                 else if(event.getType() == TableModelEvent.UPDATE){
-
+                    sendToModel.updateCCEmail((String) tableModel.getValueAt(event.getFirstRow(), 0), event.getFirstRow());
                 }
             }
             else if(BCC_TITLE.equals(title)){
                 if(event.getType() == TableModelEvent.INSERT){
-
+                    sendToModel.addBCCEmail((String)tableModel.getValueAt(event.getFirstRow(), 0));
                 }
                 else if(event.getType() == TableModelEvent.DELETE){
-
+                    sendToModel.removeBCCEmail(event.getFirstRow());
                 }
                 else if(event.getType() == TableModelEvent.UPDATE){
-
+                    sendToModel.updateBCCEmail((String) tableModel.getValueAt(event.getFirstRow(), 0), event.getFirstRow());
                 }
             }
         }

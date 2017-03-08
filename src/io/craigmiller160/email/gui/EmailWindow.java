@@ -6,6 +6,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
@@ -13,6 +14,8 @@ import java.util.Optional;
 
 import static io.craigmiller160.email.EmailTool.EXECUTE_PROP;
 import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
+import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
+import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
@@ -162,10 +165,19 @@ public class EmailWindow extends JFrame {
         JLabel attachmentsLabel = new JLabel("Attachments: ");
 
         subject = new JTextField();
+        subject.getDocument().putProperty(PROP_NAME_PROP, SUBJECT_PROP);
+        subject.getDocument().addDocumentListener(controller);
+
         body = new JTextArea(10, 50);
+        body.getDocument().putProperty(PROP_NAME_PROP, BODY_PROP);
+        body.getDocument().addDocumentListener(controller);
+
         attachmentModel = new DefaultListModel<>();
         attachments = new JList<>(attachmentModel);
+        attachments.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         attachFile = new JButton("Attach File");
+        attachFile.addActionListener(this::openFileChooser);
 
         JScrollPane bodyScroll = new JScrollPane(body);
         JScrollPane attachmentScroll = new JScrollPane(attachments);
@@ -183,12 +195,19 @@ public class EmailWindow extends JFrame {
         return messagePanel;
     }
 
+    private void openFileChooser(ActionEvent event){
+        //TODO open a file chooser here. Provide different context information as well
+    }
+
     private JPanel buildSendToPanel(){
         JPanel sendToPanel = new JPanel(new MigLayout());
 
         toEmailModel = new SendToListModel(SendToListModel.TO_TITLE);
+        toEmailModel.addTableModelListener(controller);
         ccEmailModel = new SendToListModel(SendToListModel.CC_TITLE);
+        ccEmailModel.addTableModelListener(controller);
         bccEmailModel = new SendToListModel(SendToListModel.BCC_TITLE);
+        bccEmailModel.addTableModelListener(controller);
 
         toEmailList = createTable(toEmailModel);
         ccEmailList = createTable(ccEmailModel);

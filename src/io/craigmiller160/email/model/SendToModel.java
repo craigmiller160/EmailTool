@@ -6,15 +6,15 @@ import java.util.List;
 /**
  * Created by craig on 3/6/17.
  */
-public class SendToModel {
+public class SendToModel extends AbstractModel{
 
     public static final String TO_EMAIL_PROP = "ToEmail";
     public static final String CC_EMAIL_PROP = "CCEmail";
     public static final String BCC_EMAIL_PROP = "BCCEmail";
 
-    private final List<String> toEmails;
-    private final List<String> ccEmails;
-    private final List<String> bccEmails;
+    private List<String> toEmails;
+    private List<String> ccEmails;
+    private List<String> bccEmails;
 
     public SendToModel(){
         this.toEmails = new ArrayList<>();
@@ -58,15 +58,15 @@ public class SendToModel {
         this.bccEmails.remove(index);
     }
 
-    public void setToEmail(String email, int index){
+    public void updateToEmail(String email, int index){
         this.toEmails.set(index, email);
     }
 
-    public void setCCEmail(String email, int index){
+    public void updateCCEmail(String email, int index){
         this.ccEmails.set(index, email);
     }
 
-    public void setBCCEmail(String email, int index){
+    public void updateBCCEmail(String email, int index){
         this.bccEmails.set(index, email);
     }
 
@@ -80,6 +80,36 @@ public class SendToModel {
 
     public int bccEmailCount(){
         return bccEmails.size();
+    }
+
+    public void setToEmails(List<String> toEmails){
+        List<String> old = this.toEmails;
+        this.toEmails = toEmails;
+        firePropertyChange(TO_EMAIL_PROP, old, toEmails);
+    }
+
+    public void setCCEmails(List<String> ccEmails){
+        List<String> old = this.ccEmails;
+        this.ccEmails = ccEmails;
+        firePropertyChange(CC_EMAIL_PROP, old, ccEmails);
+    }
+
+    public void setBCCEmails(List<String> bccEmails){
+        List<String> old = this.bccEmails;
+        this.bccEmails = bccEmails;
+        firePropertyChange(BCC_EMAIL_PROP, old, bccEmails);
+    }
+
+    public List<String> getToEmails(){
+        return this.toEmails;
+    }
+
+    public List<String> getCCEmails(){
+        return this.ccEmails;
+    }
+
+    public List<String> getBCCEmails(){
+        return this.bccEmails;
     }
 
 }
