@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -33,6 +34,8 @@ public class EmailWindow extends JFrame {
 
     private static final int TABLE_ROW_HEIGHT = 20;
     private static final Dimension SEND_TO_TABLE_DIMENSION = new Dimension(200, 200);
+    private static final String ATTACHMENT_CMD = "AttachmentCmd";
+    private static final String REMOVE_ATTACHMENT_CMD = "RemoveAttachmentCmd";
 
     /*
      * Options:
@@ -62,6 +65,7 @@ public class EmailWindow extends JFrame {
     private JList<String> attachments;
     private DefaultListModel<String> attachmentModel;
     private JButton attachFile;
+    private JButton removeAttachment;
 
     private JButton sendEmail;
 
@@ -82,26 +86,21 @@ public class EmailWindow extends JFrame {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(5,3, 5,3));
 
         JPanel sendToPanel = buildSendToPanel();
-        JPanel secondRowPanel = buildSecondRowPanel();
+        JPanel sendFromPanel = buildFromPanel();
+        JPanel messagePanel = buildMessagePanel();
         JPanel bottomPanel = bottomPanel();
 
         getContentPane().add(titleLabel, "dock north");
-        getContentPane().add(sendToPanel, "dock north");
-        getContentPane().add(secondRowPanel, "dock center");
-        getContentPane().add(bottomPanel, "dock south");
+        getContentPane().add(sendToPanel, "span 3, growx, pushx, wrap");
+        getContentPane().add(sendFromPanel, "grow, push");
+        getContentPane().add(messagePanel, "span 2, growx, pushx, wrap");
+        getContentPane().add(bottomPanel, "span 3, growx, pushx");
+
+        ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    private JPanel buildSecondRowPanel(){
-        JPanel secondRowPanel = new JPanel(new MigLayout());
-
-        secondRowPanel.add(buildFromPanel(), "grow, pushx");
-        secondRowPanel.add(buildMessagePanel(), "grow, pushx");
-
-        return secondRowPanel;
     }
 
     private JPanel buildFromPanel(){
@@ -175,9 +174,15 @@ public class EmailWindow extends JFrame {
         attachmentModel = new DefaultListModel<>();
         attachments = new JList<>(attachmentModel);
         attachments.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        attachmentModel.addListDataListener(controller);
 
         attachFile = new JButton("Attach File");
+        attachFile.setActionCommand(ATTACHMENT_CMD);
         attachFile.addActionListener(this::openFileChooser);
+
+        removeAttachment = new JButton("Remove Attachment");
+        removeAttachment.setActionCommand(REMOVE_ATTACHMENT_CMD);
+        removeAttachment.addActionListener(this::removeAttachment);
 
         JScrollPane bodyScroll = new JScrollPane(body);
         JScrollPane attachmentScroll = new JScrollPane(attachments);
@@ -193,10 +198,6 @@ public class EmailWindow extends JFrame {
         messagePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Message"));
 
         return messagePanel;
-    }
-
-    private void openFileChooser(ActionEvent event){
-        //TODO open a file chooser here. Provide different context information as well
     }
 
     private JPanel buildSendToPanel(){
@@ -224,6 +225,22 @@ public class EmailWindow extends JFrame {
         sendToPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Send To"));
 
         return sendToPanel;
+    }
+
+    private void openFileChooser(ActionEvent event){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int result = fileChooser.showOpenDialog(this);
+        if(JFileChooser.APPROVE_OPTION == result){
+            File file = fileChooser.getSelectedFile();
+            if(ATTACHMENT_CMD.equals(event.getActionCommand())){
+                attachmentModel.addElement(file.getAbsolutePath());
+            }
+        }
+    }
+
+    private void removeAttachment(ActionEvent event){
+        //TODO remove an attachment here
     }
 
     private JTable createTable(TableModel model){

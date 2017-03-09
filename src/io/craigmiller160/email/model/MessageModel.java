@@ -1,5 +1,6 @@
 package io.craigmiller160.email.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,10 @@ public class MessageModel extends AbstractModel {
     private String subject;
     private String body;
     private List<String> attachments;
+
+    public MessageModel(){
+        this.attachments = new ArrayList<>();
+    }
 
     public void setSubject(String subject){
         String old = this.subject;
