@@ -2,6 +2,7 @@ package io.craigmiller160.email.gui;
 
 import io.craigmiller160.email.EmailTool;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -413,7 +414,15 @@ public class EmailWindow extends JFrame {
     }
 
     public void updateAttachment(String attachment, int index){
-        //TODO finish this
+        if(!StringUtils.isEmpty(attachment) && index == this.attachmentModel.size()){
+            this.attachmentModel.addElement(attachment);
+        }
+        else if(!StringUtils.isEmpty(attachment)){
+            this.attachmentModel.setElementAt(attachment, index);
+        }
+        else{
+            this.attachmentModel.remove(index);
+        }
     }
 
 }
