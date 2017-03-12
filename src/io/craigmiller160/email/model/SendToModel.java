@@ -24,50 +24,72 @@ public class SendToModel extends AbstractModel{
 
     public void addToEmail(String email){
         this.toEmails.add(email);
+        fireIndexedPropertyChange(TO_EMAIL_PROP, this.toEmails.size() - 1, null, email);
     }
 
     public void addCCEmail(String email){
         this.ccEmails.add(email);
+        fireIndexedPropertyChange(CC_EMAIL_PROP, this.ccEmails.size() - 1, null, email);
     }
 
     public void addBCCEmail(String email){
         this.bccEmails.add(email);
+        fireIndexedPropertyChange(BCC_EMAIL_PROP, this.bccEmails.size() - 1, null, email);
     }
 
     public void removeToEmail(String email){
-        this.toEmails.remove(email);
+        int index = toEmails.indexOf(email);
+        if(index >= 0){
+            this.toEmails.remove(email);
+            fireIndexedPropertyChange(TO_EMAIL_PROP, index, email, null);
+        }
     }
 
     public void removeCCEmail(String email){
-        this.ccEmails.remove(email);
+        int index = ccEmails.indexOf(email);
+        if(index >= 0){
+            this.ccEmails.remove(email);
+            fireIndexedPropertyChange(CC_EMAIL_PROP, index, email, null);
+        }
+
     }
 
     public void removeBCCEmail(String email){
-        this.bccEmails.remove(email);
+        int index = bccEmails.indexOf(email);
+        if(index >= 0){
+            this.bccEmails.remove(email);
+            fireIndexedPropertyChange(BCC_EMAIL_PROP, index, email, null);
+        }
     }
 
     public void removeToEmail(int index){
-        this.toEmails.remove(index);
+        String email = this.toEmails.remove(index);
+        fireIndexedPropertyChange(TO_EMAIL_PROP, index, email, null);
     }
 
     public void removeCCEmail(int index){
-        this.ccEmails.remove(index);
+        String email = this.ccEmails.remove(index);
+        fireIndexedPropertyChange(CC_EMAIL_PROP, index, email, null);
     }
 
     public void removeBCCEmail(int index){
-        this.bccEmails.remove(index);
+        String email = this.bccEmails.remove(index);
+        fireIndexedPropertyChange(BCC_EMAIL_PROP, index, email, null);
     }
 
     public void updateToEmail(String email, int index){
         this.toEmails.set(index, email);
+        fireIndexedPropertyChange(TO_EMAIL_PROP, index, null, email);
     }
 
     public void updateCCEmail(String email, int index){
         this.ccEmails.set(index, email);
+        fireIndexedPropertyChange(CC_EMAIL_PROP, index, null, email);
     }
 
     public void updateBCCEmail(String email, int index){
         this.bccEmails.set(index, email);
+        fireIndexedPropertyChange(BCC_EMAIL_PROP, index, null, email);
     }
 
     public int toEmailCount(){
@@ -83,21 +105,18 @@ public class SendToModel extends AbstractModel{
     }
 
     public void setToEmails(List<String> toEmails){
-        List<String> old = this.toEmails;
         this.toEmails = toEmails;
         firePropertyChange(TO_EMAIL_PROP, null, toEmails);
     }
 
     public void setCCEmails(List<String> ccEmails){
-        List<String> old = this.ccEmails;
         this.ccEmails = ccEmails;
-        firePropertyChange(CC_EMAIL_PROP, old, ccEmails);
+        firePropertyChange(CC_EMAIL_PROP, null, ccEmails);
     }
 
     public void setBCCEmails(List<String> bccEmails){
-        List<String> old = this.bccEmails;
         this.bccEmails = bccEmails;
-        firePropertyChange(BCC_EMAIL_PROP, old, bccEmails);
+        firePropertyChange(BCC_EMAIL_PROP, null, bccEmails);
     }
 
     public List<String> getToEmails(){

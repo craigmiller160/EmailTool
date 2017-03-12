@@ -20,8 +20,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.IndexedPropertyChangeEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -114,14 +116,34 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             this.sendFromModel.clear();
             this.messageModel.clear();
         }
-        else if(LOAD_PROP.equals(event.getActionCommand())){
-            //TODO finish this
+    }
+
+    public void loadConfig(File file){
+        if(!file.exists() && !file.isFile()){
+            JOptionPane.showMessageDialog(view, "Cannot load configuration, not valid file", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        else if(SAVE_PROP.equals(event.getActionCommand())){
-            //TODO finish this
+
+        this.sendToModel.clear();
+        this.sendFromModel.clear();
+        this.messageModel.clear();
+
+        try{
+            PersistConfiguration.loadConfig(file, sendToModel, sendFromModel, messageModel);
         }
-        else if(SAVE_AS_PROP.equals(event.getActionCommand())){
-            //TODO finish this
+        catch(Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Failed to load configuration: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void saveConfig(File file){
+        try{
+            PersistConfiguration.saveConfig(file, sendToModel, sendFromModel, messageModel);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Failed to save configuration: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -254,13 +276,31 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         if(!isPropertyChanging){
             isPropertyChanging = true;
             if(TO_EMAIL_PROP.equals(evt.getPropertyName())){
-                view.setToEmails((List<String>) evt.getNewValue());
+                if(evt instanceof IndexedPropertyChangeEvent){
+                    int index = ((IndexedPropertyChangeEvent) evt).getIndex();
+                    view.updateToEmail((String) evt.getNewValue(), index);
+                }
+                else{
+                    view.setToEmails((List<String>) evt.getNewValue());
+                }
             }
             else if(CC_EMAIL_PROP.equals(evt.getPropertyName())){
-                view.setCCEmails((List<String>) evt.getNewValue());
+                if(evt instanceof IndexedPropertyChangeEvent){
+                    int index = ((IndexedPropertyChangeEvent) evt).getIndex();
+                    view.updateCCEmail((String) evt.getNewValue(), index);
+                }
+                else{
+                    view.setCCEmails((List<String>) evt.getNewValue());
+                }
             }
             else if(BCC_EMAIL_PROP.equals(evt.getPropertyName())){
-                view.setBCCEmails((List<String>) evt.getNewValue());
+                if(evt instanceof IndexedPropertyChangeEvent){
+                    int index = ((IndexedPropertyChangeEvent) evt).getIndex();
+                    view.updateBCCEmail((String) evt.getNewValue(), index);
+                }
+                else{
+                    view.setBCCEmails((List<String>) evt.getNewValue());
+                }
             }
             else if(HOST_PROP.equals(evt.getPropertyName())){
                 view.setHost((String) evt.getNewValue());
@@ -287,7 +327,13 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
                 view.setBody((String) evt.getNewValue());
             }
             else if(ATTACHMENTS_PROP.equals(evt.getPropertyName())){
-                view.setAttachments((List<String>) evt.getNewValue());
+                if(evt instanceof IndexedPropertyChangeEvent){
+                    int index = ((IndexedPropertyChangeEvent) evt).getIndex();
+                    view.updateAttachment((String) evt.getNewValue(), index);
+                }
+                else{
+                    view.setAttachments((List<String>) evt.getNewValue());
+                }
             }
             isPropertyChanging = false;
         }

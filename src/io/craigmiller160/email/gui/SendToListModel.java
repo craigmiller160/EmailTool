@@ -28,7 +28,7 @@ public class SendToListModel extends AbstractTableModel {
     }
 
     public void setValues(List<String> values){
-        this.values = values;
+        this.values = new ArrayList<>(values);
         fireTableDataChanged();
     }
 

@@ -275,11 +275,24 @@ public class EmailWindow extends JFrame {
     private void openFileChooser(ActionEvent event){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int result = fileChooser.showOpenDialog(this);
+        int result = -1;
+        if(ATTACHMENT_CMD.equals(event.getActionCommand()) || LOAD_PROP.equals(event.getActionCommand())){
+            result = fileChooser.showOpenDialog(this);
+        }
+        else{
+            result = fileChooser.showSaveDialog(this);
+        }
+
         if(JFileChooser.APPROVE_OPTION == result){
             File file = fileChooser.getSelectedFile();
             if(ATTACHMENT_CMD.equals(event.getActionCommand())){
                 attachmentModel.addElement(file.getAbsolutePath());
+            }
+            else if(LOAD_PROP.equals(event.getActionCommand())){
+                controller.loadConfig(file);
+            }
+            else if(SAVE_PROP.equals(event.getActionCommand())){
+                controller.saveConfig(file);
             }
         }
     }
@@ -309,23 +322,23 @@ public class EmailWindow extends JFrame {
 
         saveConfig = new JButton("Save");
         saveConfig.setActionCommand(SAVE_PROP);
-        saveConfig.addActionListener(controller);
+        saveConfig.addActionListener(this::openFileChooser);
         saveConfig.setPreferredSize(new Dimension(50,50));
 
         saveAsConfig = new JButton("Save As");
         saveAsConfig.setActionCommand(SAVE_AS_PROP);
-        saveAsConfig.addActionListener(controller);
+        saveAsConfig.addActionListener(this::openFileChooser);
         saveAsConfig.setPreferredSize(new Dimension(70,50));
 
         loadConfig = new JButton("Load");
         loadConfig.setActionCommand(LOAD_PROP);
-        loadConfig.addActionListener(controller);
+        loadConfig.addActionListener(this::openFileChooser);
         loadConfig.setPreferredSize(new Dimension(50,50));
 
         toolBar.add(newConfig);
         toolBar.add(loadConfig);
         toolBar.add(saveConfig);
-        toolBar.add(saveAsConfig);
+//        toolBar.add(saveAsConfig);
 
         return toolBar;
     }
@@ -340,6 +353,18 @@ public class EmailWindow extends JFrame {
 
     public void setBCCEmails(java.util.List<String> emails){
         this.bccEmailModel.setValues(emails != null ? emails : new ArrayList<>());
+    }
+
+    public void updateToEmail(String email, int index){
+        this.toEmailModel.setValueAt(email, index, 0);
+    }
+
+    public void updateCCEmail(String email, int index){
+        this.ccEmailModel.setValueAt(email, index, 0);
+    }
+
+    public void updateBCCEmail(String email, int index){
+        this.bccEmailModel.setValueAt(email, index, 0);
     }
 
     public void setHost(String host){
@@ -385,6 +410,10 @@ public class EmailWindow extends JFrame {
                 this.attachmentModel.addElement(s);
             }
         }
+    }
+
+    public void updateAttachment(String attachment, int index){
+        //TODO finish this
     }
 
 }

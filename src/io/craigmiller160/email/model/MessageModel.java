@@ -52,16 +52,31 @@ public class MessageModel extends AbstractModel {
         return this.attachments;
     }
 
+    public int getAttachmentCount(){
+        return this.attachments.size();
+    }
+
     public void addAttachment(String attachment){
         this.attachments.add(attachment);
+        fireIndexedPropertyChange(ATTACHMENTS_PROP, this.attachments.size() - 1, null, attachment);
+    }
+
+    public void removeAttachment(String attachment){
+        int index = this.attachments.indexOf(attachment);
+        if(index >= 0){
+            this.attachments.remove(attachment);
+            fireIndexedPropertyChange(ATTACHMENTS_PROP, index, attachment, null);
+        }
     }
 
     public void removeAttachment(int index){
-        this.attachments.remove(index);
+        String attachment = this.attachments.remove(index);
+        fireIndexedPropertyChange(ATTACHMENTS_PROP, index, attachment, null);
     }
 
     public void updateAttachment(String attachment, int index){
         this.attachments.set(index, attachment);
+        fireIndexedPropertyChange(ATTACHMENTS_PROP, index, null, attachment);
     }
 
     @Override
