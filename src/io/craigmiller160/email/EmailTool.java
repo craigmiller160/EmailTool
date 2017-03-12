@@ -122,15 +122,36 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     }
 
     public void importToEmails(File file){
-        //TODO finish this
+        try{
+            List<String> emails = EmailImporter.importEmails(file);
+            this.sendToModel.setToEmails(emails);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Unable to import emails: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void importCCEmails(File file){
-        //TODO finish this
+        try{
+            List<String> emails = EmailImporter.importEmails(file);
+            this.sendToModel.setCCEmails(emails);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Unable to import emails: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void importBCCEmails(File file){
-        //TODO finish this
+        try{
+            List<String> emails = EmailImporter.importEmails(file);
+            this.sendToModel.setBCCEmails(emails);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Unable to import emails: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void loadConfig(File file){
