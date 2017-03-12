@@ -89,6 +89,14 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     public void actionPerformed(ActionEvent event) {
         if(EXECUTE_PROP.equals(event.getActionCommand())){
             //TODO this is where the email sending execution logic goes
+
+            try{
+                Email email = Email.newEmail(sendFromModel, sendToModel, messageModel);
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(view, "Unable to send email: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 

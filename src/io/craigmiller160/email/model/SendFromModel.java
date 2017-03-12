@@ -1,5 +1,7 @@
 package io.craigmiller160.email.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by craig on 3/6/17.
  */
@@ -65,5 +67,18 @@ public class SendFromModel extends AbstractModel{
         boolean old = this.startTLS;
         this.startTLS = startTLS;
         firePropertyChange(START_TLS_PROP, old, startTLS);
+    }
+
+    @Override
+    public void validate() throws Exception {
+        if(port == 0){
+            throw new Exception("Email is missing SMTP Port");
+        }
+        else if(StringUtils.isEmpty(username)){
+            throw new Exception("Email needs sending account username");
+        }
+        else if(StringUtils.isEmpty(password)){
+            throw new Exception("Email needs sending account password");
+        }
     }
 }

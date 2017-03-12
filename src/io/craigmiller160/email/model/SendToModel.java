@@ -112,4 +112,10 @@ public class SendToModel extends AbstractModel{
         return this.bccEmails;
     }
 
+    @Override
+    public void validate() throws Exception {
+        if(toEmails.isEmpty() && ccEmails.isEmpty() && bccEmails.isEmpty()){
+            throw new Exception("Email has no recipients sent");
+        }
+    }
 }

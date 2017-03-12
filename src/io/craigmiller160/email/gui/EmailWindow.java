@@ -108,7 +108,7 @@ public class EmailWindow extends JFrame {
 
         JLabel usernameLabel = new JLabel("Username: ");
         JLabel passwordLabel = new JLabel("Password: ");
-        JLabel portLabel = new JLabel("Port: ");
+        JLabel portLabel = new JLabel("SMTP Port: ");
 
         username = new JTextField();
         username.getDocument().putProperty(PROP_NAME_PROP, USERNAME_PROP);
@@ -193,7 +193,8 @@ public class EmailWindow extends JFrame {
         messagePanel.add(bodyScroll, "growx, pushx, wrap");
         messagePanel.add(attachmentsLabel, "");
         messagePanel.add(attachmentScroll, "growx, pushx, wrap");
-        messagePanel.add(attachFile, "skip 1");
+        messagePanel.add(attachFile, "skip 1, split 2");
+        messagePanel.add(removeAttachment, "");
 
         messagePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Message"));
 
@@ -241,6 +242,8 @@ public class EmailWindow extends JFrame {
 
     private void removeAttachment(ActionEvent event){
         //TODO remove an attachment here
+        int selectedIndex = attachments.getSelectedIndex();
+        attachmentModel.remove(selectedIndex);
     }
 
     private JTable createTable(TableModel model){

@@ -1,5 +1,7 @@
 package io.craigmiller160.email.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,4 +60,10 @@ public class MessageModel extends AbstractModel {
         this.attachments.set(index, attachment);
     }
 
+    @Override
+    public void validate() throws Exception {
+        if(StringUtils.isEmpty(subject)){
+            throw new Exception("Email is missing subject line");
+        }
+    }
 }

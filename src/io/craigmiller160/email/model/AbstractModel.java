@@ -26,4 +26,6 @@ public abstract class AbstractModel{
         this.support.fireIndexedPropertyChange(propertyName, index, oldVal, newVal);
     }
 
+    public abstract void validate() throws Exception;
+
 }
