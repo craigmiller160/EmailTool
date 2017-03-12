@@ -351,6 +351,7 @@ public class EmailWindow extends JFrame {
         table.setDefaultRenderer(String.class, new CellRenderer());
         table.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         return table;
     }
 
