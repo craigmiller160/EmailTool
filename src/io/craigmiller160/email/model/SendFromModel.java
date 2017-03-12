@@ -7,17 +7,29 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SendFromModel extends AbstractModel{
 
+    public static final String HOST_PROP = "host";
     public static final String USERNAME_PROP = "Username";
     public static final String PASSWORD_PROP = "Password";
     public static final String PORT_PROP = "Port";
     public static final String AUTH_PROP = "Auth";
     public static final String START_TLS_PROP = "StartTLS";
 
+    private String host;
     private String username;
     private String password;
     private int port;
     private boolean auth;
     private boolean startTLS;
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        String old = this.host;
+        this.host = host;
+        firePropertyChange(HOST_PROP, old, host);
+    }
 
     public String getUsername() {
         return username;
@@ -71,7 +83,10 @@ public class SendFromModel extends AbstractModel{
 
     @Override
     public void validate() throws Exception {
-        if(port == 0){
+        if(StringUtils.isEmpty(host)){
+            throw new Exception("Email is missing SMTP Host");
+        }
+        else if(port == 0){
             throw new Exception("Email is missing SMTP Port");
         }
         else if(auth && StringUtils.isEmpty(username)){

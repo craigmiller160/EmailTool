@@ -38,6 +38,10 @@ public class MessageModel extends AbstractModel {
         firePropertyChange(BODY_PROP, old, body);
     }
 
+    public String getBody(){
+        return this.body;
+    }
+
     public void setAttachments(List<String> attachments){
         List<String> old = this.attachments;
         this.attachments = attachments;

@@ -18,6 +18,7 @@ import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
+import static io.craigmiller160.email.model.SendFromModel.HOST_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.START_TLS_PROP;
@@ -59,6 +60,7 @@ public class EmailWindow extends JFrame {
     private JSpinner port;
     private JCheckBox auth;
     private JCheckBox startTLS;
+    private JTextField host;
 
     private JTextField subject;
     private JTextArea body;
@@ -109,6 +111,7 @@ public class EmailWindow extends JFrame {
         JLabel usernameLabel = new JLabel("Username: ");
         JLabel passwordLabel = new JLabel("Password: ");
         JLabel portLabel = new JLabel("SMTP Port: ");
+        JLabel hostLabel = new JLabel("SMTP Host: ");
 
         username = new JTextField();
         username.getDocument().putProperty(PROP_NAME_PROP, USERNAME_PROP);
@@ -133,6 +136,12 @@ public class EmailWindow extends JFrame {
         startTLS.setName(START_TLS_PROP);
         startTLS.addItemListener(controller);
 
+        host = new JTextField();
+        host.getDocument().putProperty(PROP_NAME_PROP, HOST_PROP);
+        host.getDocument().addDocumentListener(controller);
+
+        fromPanel.add(hostLabel, "");
+        fromPanel.add(host, "growx, pushx, wrap");
         fromPanel.add(portLabel, "");
         fromPanel.add(port, "growx, pushx, wrap");
         fromPanel.add(auth, "skip 1, growx, pushx, wrap");

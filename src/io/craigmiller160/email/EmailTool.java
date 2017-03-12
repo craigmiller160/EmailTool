@@ -31,6 +31,7 @@ import static io.craigmiller160.email.gui.SendToListModel.TO_TITLE;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
+import static io.craigmiller160.email.model.SendFromModel.HOST_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.START_TLS_PROP;
@@ -125,6 +126,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             }
             else if(PASSWORD_PROP.equals(propName)){
                 sendFromModel.setPassword(text);
+            }
+            else if(HOST_PROP.equals(propName)){
+                sendFromModel.setHost(text);
             }
             else if(SUBJECT_PROP.equals(propName)){
                 messageModel.setSubject(text);
