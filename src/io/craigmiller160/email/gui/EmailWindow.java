@@ -16,6 +16,9 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static io.craigmiller160.email.EmailTool.EXECUTE_PROP;
+import static io.craigmiller160.email.EmailTool.IMPORT_BCC_PROP;
+import static io.craigmiller160.email.EmailTool.IMPORT_CC_PROP;
+import static io.craigmiller160.email.EmailTool.IMPORT_TO_PROP;
 import static io.craigmiller160.email.EmailTool.LOAD_PROP;
 import static io.craigmiller160.email.EmailTool.NEW_PROP;
 import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
@@ -60,6 +63,9 @@ public class EmailWindow extends JFrame {
     private SendToListModel toEmailModel;
     private SendToListModel ccEmailModel;
     private SendToListModel bccEmailModel;
+    private JButton importTo;
+    private JButton importCC;
+    private JButton importBCC;
 
     private JTextField username;
     private JPasswordField password;
@@ -260,13 +266,38 @@ public class EmailWindow extends JFrame {
         ccEmailList = createTable(ccEmailModel);
         bccEmailList = createTable(bccEmailModel);
 
+        importTo = new JButton("Import");
+        importTo.setActionCommand(IMPORT_TO_PROP);
+        importTo.addActionListener(this::openFileChooser);
+
+        importCC = new JButton("Import");
+        importCC.setActionCommand(IMPORT_CC_PROP);
+        importCC.addActionListener(this::openFileChooser);
+
+        importBCC = new JButton("Import");
+        importBCC.setActionCommand(IMPORT_BCC_PROP);
+        importBCC.addActionListener(this::openFileChooser);
+
         JScrollPane toEmailScroll = new JScrollPane(toEmailList);
         JScrollPane ccEmailScroll = new JScrollPane(ccEmailList);
         JScrollPane bccEmailScroll = new JScrollPane(bccEmailList);
 
-        sendToPanel.add(toEmailScroll, "growx, pushx");
-        sendToPanel.add(ccEmailScroll, "growx, pushx");
-        sendToPanel.add(bccEmailScroll, "growx, pushx");
+        JPanel toPanel = new JPanel(new MigLayout());
+        JPanel ccPanel = new JPanel(new MigLayout());
+        JPanel bccPanel = new JPanel(new MigLayout());
+
+        toPanel.add(toEmailScroll, "growx, pushx, wrap");
+        toPanel.add(importTo);
+
+        ccPanel.add(ccEmailScroll, "growx, pushx, wrap");
+        ccPanel.add(importCC);
+
+        bccPanel.add(bccEmailScroll, "growx, pushx, wrap");
+        bccPanel.add(importBCC);
+
+        sendToPanel.add(toPanel, "growx, pushx");
+        sendToPanel.add(ccPanel, "growx, pushx");
+        sendToPanel.add(bccPanel, "growx, pushx");
 
         sendToPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Send To"));
 
@@ -277,7 +308,9 @@ public class EmailWindow extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int result = -1;
-        if(ATTACHMENT_CMD.equals(event.getActionCommand()) || LOAD_PROP.equals(event.getActionCommand())){
+        if(ATTACHMENT_CMD.equals(event.getActionCommand()) || LOAD_PROP.equals(event.getActionCommand()) ||
+                IMPORT_TO_PROP.equals(event.getActionCommand()) || IMPORT_CC_PROP.equals(event.getActionCommand()) ||
+                IMPORT_BCC_PROP.equals(event.getActionCommand())){
             result = fileChooser.showOpenDialog(this);
         }
         else{
@@ -294,6 +327,15 @@ public class EmailWindow extends JFrame {
             }
             else if(SAVE_PROP.equals(event.getActionCommand())){
                 controller.saveConfig(file);
+            }
+            else if(IMPORT_TO_PROP.equals(event.getActionCommand())){
+                controller.importToEmails(file);
+            }
+            else if(IMPORT_CC_PROP.equals(event.getActionCommand())){
+                controller.importCCEmails(file);
+            }
+            else if(IMPORT_BCC_PROP.equals(event.getActionCommand())){
+                controller.importBCCEmails(file);
             }
         }
     }

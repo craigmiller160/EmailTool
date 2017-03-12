@@ -75,6 +75,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     public static final String LOAD_PROP = "Load";
     public static final String SAVE_AS_PROP = "SaveAs";
     public static final String NEW_PROP = "New";
+    public static final String IMPORT_TO_PROP = "ImportTo";
+    public static final String IMPORT_CC_PROP = "ImportCC";
+    public static final String IMPORT_BCC_PROP = "ImportBCC";
 
     private SendFromModel sendFromModel;
     private SendToModel sendToModel;
@@ -116,6 +119,18 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             this.sendFromModel.clear();
             this.messageModel.clear();
         }
+    }
+
+    public void importToEmails(File file){
+        //TODO finish this
+    }
+
+    public void importCCEmails(File file){
+        //TODO finish this
+    }
+
+    public void importBCCEmails(File file){
+        //TODO finish this
     }
 
     public void loadConfig(File file){
