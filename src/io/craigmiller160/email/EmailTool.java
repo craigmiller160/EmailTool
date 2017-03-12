@@ -23,11 +23,13 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static io.craigmiller160.email.gui.SendToListModel.BCC_TITLE;
 import static io.craigmiller160.email.gui.SendToListModel.CC_TITLE;
 import static io.craigmiller160.email.gui.SendToListModel.TO_TITLE;
+import static io.craigmiller160.email.model.MessageModel.ATTACHMENTS_PROP;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
@@ -36,6 +38,9 @@ import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.START_TLS_PROP;
 import static io.craigmiller160.email.model.SendFromModel.USERNAME_PROP;
+import static io.craigmiller160.email.model.SendToModel.BCC_EMAIL_PROP;
+import static io.craigmiller160.email.model.SendToModel.CC_EMAIL_PROP;
+import static io.craigmiller160.email.model.SendToModel.TO_EMAIL_PROP;
 
 /**
  * Created by craig on 3/6/17.
@@ -73,7 +78,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     private SendToModel sendToModel;
     private MessageModel messageModel;
     private EmailWindow view;
-    private volatile boolean viewIsChangingProperty = false;
+    private volatile boolean isPropertyChanging = false;
 
     public EmailTool(){
         init();
@@ -84,7 +89,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         this.sendFromModel.addPropertyChangeListener(this);
 
         this.sendToModel = new SendToModel();
-        this.sendFromModel.addPropertyChangeListener(this);
+        this.sendToModel.addPropertyChangeListener(this);
 
         this.messageModel = new MessageModel();
         this.messageModel.addPropertyChangeListener(this);
@@ -105,9 +110,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             }
         }
         else if(NEW_PROP.equals(event.getActionCommand())){
-            viewIsChangingProperty = true;
-
-            viewIsChangingProperty = false;
+            this.sendToModel.clear();
+            this.sendFromModel.clear();
+            this.messageModel.clear();
         }
     }
 
@@ -127,7 +132,8 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     }
 
     private void documentChanged(DocumentEvent event){
-        if(!viewIsChangingProperty){
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
             try{
                 String propName = (String) event.getDocument().getProperty(PROP_NAME_PROP);
                 String text = event.getDocument().getText(0, event.getDocument().getLength());
@@ -150,40 +156,48 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             catch(BadLocationException ex){
                 ex.printStackTrace();
             }
+            isPropertyChanging = false;
         }
     }
 
     @Override
     public void intervalAdded(ListDataEvent event) {
-        if(!viewIsChangingProperty){
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
             int index = event.getIndex0();
             DefaultListModel<String> source = (DefaultListModel<String>) event.getSource();
             String value = source.getElementAt(index);
             messageModel.addAttachment(value);
+            isPropertyChanging = false;
         }
     }
 
     @Override
     public void intervalRemoved(ListDataEvent event) {
-        if(!viewIsChangingProperty){
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
             int index = event.getIndex0();
             messageModel.removeAttachment(index);
+            isPropertyChanging = false;
         }
     }
 
     @Override
     public void contentsChanged(ListDataEvent event) {
-        if(!viewIsChangingProperty){
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
             int index = event.getIndex0();
             DefaultListModel<String> source = (DefaultListModel<String>) event.getSource();
             String value = source.getElementAt(index);
             messageModel.updateAttachment(value, index);
+            isPropertyChanging = false;
         }
     }
 
     @Override
     public void tableChanged(TableModelEvent event) {
-        if(!viewIsChangingProperty){
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
             Object source = event.getSource();
             if(source instanceof SendToListModel){
                 SendToListModel tableModel = (SendToListModel) source;
@@ -222,12 +236,52 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
                     }
                 }
             }
+            isPropertyChanging = false;
         }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //TODO this is where property changes that should update the view go
+        if(!isPropertyChanging){
+            isPropertyChanging = true;
+            if(TO_EMAIL_PROP.equals(evt.getPropertyName())){
+                view.setToEmails((List<String>) evt.getNewValue());
+            }
+            else if(CC_EMAIL_PROP.equals(evt.getPropertyName())){
+                view.setCCEmails((List<String>) evt.getNewValue());
+            }
+            else if(BCC_EMAIL_PROP.equals(evt.getPropertyName())){
+                view.setBCCEmails((List<String>) evt.getNewValue());
+            }
+            else if(HOST_PROP.equals(evt.getPropertyName())){
+                view.setHost((String) evt.getNewValue());
+            }
+            else if(PORT_PROP.equals(evt.getPropertyName())){
+                view.setPort((Integer) evt.getNewValue());
+            }
+            else if(START_TLS_PROP.equals(evt.getPropertyName())){
+                view.setStartTLS((Boolean) evt.getNewValue());
+            }
+            else if(AUTH_PROP.equals(evt.getPropertyName())){
+                view.setAuth((Boolean) evt.getNewValue());
+            }
+            else if(USERNAME_PROP.equals(evt.getPropertyName())){
+                view.setUsername((String) evt.getNewValue());
+            }
+            else if(PASSWORD_PROP.equals(evt.getPropertyName())){
+                view.setPassword((String) evt.getNewValue());
+            }
+            else if(SUBJECT_PROP.equals(evt.getPropertyName())){
+                view.setSubject((String) evt.getNewValue());
+            }
+            else if(BODY_PROP.equals(evt.getPropertyName())){
+                view.setBody((String) evt.getNewValue());
+            }
+            else if(ATTACHMENTS_PROP.equals(evt.getPropertyName())){
+                view.setAttachments((List<String>) evt.getNewValue());
+            }
+            isPropertyChanging = false;
+        }
     }
 
     @Override

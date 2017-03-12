@@ -85,7 +85,7 @@ public class SendToModel extends AbstractModel{
     public void setToEmails(List<String> toEmails){
         List<String> old = this.toEmails;
         this.toEmails = toEmails;
-        firePropertyChange(TO_EMAIL_PROP, old, toEmails);
+        firePropertyChange(TO_EMAIL_PROP, null, toEmails);
     }
 
     public void setCCEmails(List<String> ccEmails){

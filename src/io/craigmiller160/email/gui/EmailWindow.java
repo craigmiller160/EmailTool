@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -303,22 +304,22 @@ public class EmailWindow extends JFrame {
 
         newConfig = new JButton("New");
         newConfig.setActionCommand(NEW_PROP);
-        newConfig.addActionListener(this::changeConfig);
+        newConfig.addActionListener(controller);
         newConfig.setPreferredSize(new Dimension(50,50));
 
         saveConfig = new JButton("Save");
         saveConfig.setActionCommand(SAVE_PROP);
-        saveConfig.addActionListener(this::changeConfig);
+        saveConfig.addActionListener(controller);
         saveConfig.setPreferredSize(new Dimension(50,50));
 
         saveAsConfig = new JButton("Save As");
         saveAsConfig.setActionCommand(SAVE_AS_PROP);
-        saveAsConfig.addActionListener(this::changeConfig);
+        saveAsConfig.addActionListener(controller);
         saveAsConfig.setPreferredSize(new Dimension(70,50));
 
         loadConfig = new JButton("Load");
         loadConfig.setActionCommand(LOAD_PROP);
-        loadConfig.addActionListener(this::changeConfig);
+        loadConfig.addActionListener(controller);
         loadConfig.setPreferredSize(new Dimension(50,50));
 
         toolBar.add(newConfig);
@@ -329,18 +330,60 @@ public class EmailWindow extends JFrame {
         return toolBar;
     }
 
-    private void changeConfig(ActionEvent event){
-        if(NEW_PROP.equals(event.getActionCommand())){
-            controller.actionPerformed(event);
-        }
-        else if(LOAD_PROP.equals(event.getActionCommand())){
+    public void setToEmails(java.util.List<String> emails){
+        this.toEmailModel.setValues(emails != null ? emails : new ArrayList<>());
+    }
 
-        }
-        else if(SAVE_PROP.equals(event.getActionCommand())){
+    public void setCCEmails(java.util.List<String> emails){
+        this.ccEmailModel.setValues(emails != null ? emails : new ArrayList<>());
+    }
 
-        }
-        else if(SAVE_AS_PROP.equals(event.getActionCommand())){
+    public void setBCCEmails(java.util.List<String> emails){
+        this.bccEmailModel.setValues(emails != null ? emails : new ArrayList<>());
+    }
 
+    public void setHost(String host){
+        this.host.setText(host != null ? host : "");
+    }
+
+    public void setPort(int port){
+        this.port.setValue(port);
+    }
+
+    public void setAuth(boolean auth){
+        this.auth.setSelected(auth);
+    }
+
+    public void setStartTLS(boolean startTLS){
+        this.startTLS.setSelected(startTLS);
+    }
+
+    public void setUsername(String username){
+        if(this.auth.isSelected()){
+            this.username.setText(username != null ? username : "");
+        }
+    }
+
+    public void setPassword(String password){
+        if(this.auth.isSelected()){
+            this.password.setText(password != null ? password : "");
+        }
+    }
+
+    public void setSubject(String subject){
+        this.subject.setText(subject != null ? subject : "");
+    }
+
+    public void setBody(String body){
+        this.body.setText(body != null ? body : "");
+    }
+
+    public void setAttachments(java.util.List<String> attachments){
+        this.attachmentModel.clear();
+        if(attachments != null){
+            for(String s : attachments){
+                this.attachmentModel.addElement(s);
+            }
         }
     }
 

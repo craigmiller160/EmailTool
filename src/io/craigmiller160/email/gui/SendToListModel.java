@@ -29,6 +29,7 @@ public class SendToListModel extends AbstractTableModel {
 
     public void setValues(List<String> values){
         this.values = values;
+        fireTableDataChanged();
     }
 
     @Override
