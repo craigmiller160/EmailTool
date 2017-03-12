@@ -183,10 +183,21 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         }
     }
 
-    //TODO split save and save as
     public void saveConfig(File file){
+        if(file == null){
+            file = saveModel.getSaveFile();
+            if(file == null){
+                System.err.println("Cannot find file to save configuration to");
+                JOptionPane.showMessageDialog(view, "Cannot find file to save configuration to", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         try{
             PersistConfiguration.saveConfig(file, sendToModel, sendFromModel, messageModel);
+            String saveName = FilenameUtils.getBaseName(file.getAbsolutePath());
+            this.saveModel.setSaveName(saveName);
+            this.saveModel.setSaveFile(file);
         }
         catch(Exception ex){
             ex.printStackTrace();

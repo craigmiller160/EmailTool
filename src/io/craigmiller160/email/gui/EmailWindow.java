@@ -329,7 +329,7 @@ public class EmailWindow extends JFrame {
             else if(LOAD_PROP.equals(event.getActionCommand())){
                 controller.loadConfig(file);
             }
-            else if(SAVE_PROP.equals(event.getActionCommand())){
+            else if(SAVE_PROP.equals(event.getActionCommand()) || SAVE_AS_PROP.equals(event.getActionCommand())){
                 controller.saveConfig(file);
             }
             else if(IMPORT_TO_PROP.equals(event.getActionCommand())){
@@ -370,7 +370,14 @@ public class EmailWindow extends JFrame {
 
         saveConfig = new JButton("Save");
         saveConfig.setActionCommand(SAVE_PROP);
-        saveConfig.addActionListener(this::openFileChooser);
+        saveConfig.addActionListener((e) -> {
+            if(!StringUtils.isEmpty(saveNameLabel.getText())){
+                controller.saveConfig(null);
+            }
+            else{
+                openFileChooser(e);
+            }
+        });
         saveConfig.setPreferredSize(new Dimension(50,50));
 
         saveAsConfig = new JButton("Save As");
