@@ -3,8 +3,10 @@ package io.craigmiller160.email;
 import io.craigmiller160.email.gui.EmailWindow;
 import io.craigmiller160.email.gui.SendToListModel;
 import io.craigmiller160.email.model.MessageModel;
+import io.craigmiller160.email.model.SaveModel;
 import io.craigmiller160.email.model.SendFromModel;
 import io.craigmiller160.email.model.SendToModel;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -34,6 +36,7 @@ import static io.craigmiller160.email.gui.SendToListModel.TO_TITLE;
 import static io.craigmiller160.email.model.MessageModel.ATTACHMENTS_PROP;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
+import static io.craigmiller160.email.model.SaveModel.SAVE_NAME_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
 import static io.craigmiller160.email.model.SendFromModel.HOST_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
@@ -82,6 +85,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
     private SendFromModel sendFromModel;
     private SendToModel sendToModel;
     private MessageModel messageModel;
+    private SaveModel saveModel;
     private EmailWindow view;
     private volatile boolean isPropertyChanging = false;
 
@@ -98,6 +102,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
 
         this.messageModel = new MessageModel();
         this.messageModel.addPropertyChangeListener(this);
+
+        this.saveModel = new SaveModel();
+        this.saveModel.addPropertyChangeListener(this);
 
         this.view = new EmailWindow(this);
     }
@@ -166,6 +173,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
 
         try{
             PersistConfiguration.loadConfig(file, sendToModel, sendFromModel, messageModel);
+            String saveName = FilenameUtils.getBaseName(file.getAbsolutePath());
+            this.saveModel.setSaveName(saveName);
+            this.saveModel.setSaveFile(file);
         }
         catch(Exception ex) {
             ex.printStackTrace();
@@ -173,6 +183,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         }
     }
 
+    //TODO split save and save as
     public void saveConfig(File file){
         try{
             PersistConfiguration.saveConfig(file, sendToModel, sendFromModel, messageModel);
@@ -370,6 +381,9 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
                 else{
                     view.setAttachments((List<String>) evt.getNewValue());
                 }
+            }
+            else if(SAVE_NAME_PROP.equals(evt.getPropertyName())){
+                view.setSaveName((String) evt.getNewValue());
             }
             isPropertyChanging = false;
         }

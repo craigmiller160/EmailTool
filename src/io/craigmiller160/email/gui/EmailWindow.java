@@ -87,6 +87,9 @@ public class EmailWindow extends JFrame {
     private JButton saveAsConfig;
     private JButton loadConfig;
     private JButton newConfig;
+    private JLabel saveNameLabel;
+
+    private File lastLocation;
 
     private EmailTool controller;
 
@@ -122,9 +125,6 @@ public class EmailWindow extends JFrame {
         getContentPane().add(bottomPanel, "span 3, growx, pushx");
 
         ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-
-
 
         pack();
         setLocationRelativeTo(null);
@@ -306,6 +306,9 @@ public class EmailWindow extends JFrame {
 
     private void openFileChooser(ActionEvent event){
         JFileChooser fileChooser = new JFileChooser();
+        if(lastLocation != null){
+            fileChooser.setCurrentDirectory(lastLocation);
+        }
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int result = -1;
         if(ATTACHMENT_CMD.equals(event.getActionCommand()) || LOAD_PROP.equals(event.getActionCommand()) ||
@@ -318,6 +321,7 @@ public class EmailWindow extends JFrame {
         }
 
         if(JFileChooser.APPROVE_OPTION == result){
+            lastLocation = fileChooser.getCurrentDirectory();
             File file = fileChooser.getSelectedFile();
             if(ATTACHMENT_CMD.equals(event.getActionCommand())){
                 attachmentModel.addElement(file.getAbsolutePath());
@@ -379,10 +383,16 @@ public class EmailWindow extends JFrame {
         loadConfig.addActionListener(this::openFileChooser);
         loadConfig.setPreferredSize(new Dimension(50,50));
 
+        saveNameLabel = new JLabel();
+        saveNameLabel.setFont(Fonts.SAVE_NAME_FONT);
+        saveNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+
         toolBar.add(newConfig);
         toolBar.add(loadConfig);
         toolBar.add(saveConfig);
-//        toolBar.add(saveAsConfig);
+        toolBar.add(saveAsConfig); //TODO need save as behavior
+        toolBar.addSeparator();
+        toolBar.add(saveNameLabel);
 
         return toolBar;
     }
@@ -466,6 +476,10 @@ public class EmailWindow extends JFrame {
         else{
             this.attachmentModel.remove(index);
         }
+    }
+
+    public void setSaveName(String saveName){
+        this.saveNameLabel.setText(saveName);
     }
 
 }
