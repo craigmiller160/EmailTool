@@ -118,4 +118,11 @@ public class SendToModel extends AbstractModel{
             throw new Exception("Email has no recipients sent");
         }
     }
+
+    @Override
+    public void clear() {
+        setToEmails(new ArrayList<>());
+        setCCEmails(new ArrayList<>());
+        setBCCEmails(new ArrayList<>());
+    }
 }

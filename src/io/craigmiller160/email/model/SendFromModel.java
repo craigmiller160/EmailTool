@@ -96,4 +96,14 @@ public class SendFromModel extends AbstractModel{
             throw new Exception("Email needs sending account password");
         }
     }
+
+    @Override
+    public void clear() {
+        setPort(0);
+        setHost(null);
+        setUsername(null);
+        setPassword(null);
+        setAuth(false);
+        setStartTLS(false);
+    }
 }

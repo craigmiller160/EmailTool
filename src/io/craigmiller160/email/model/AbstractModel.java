@@ -28,4 +28,6 @@ public abstract class AbstractModel{
 
     public abstract void validate() throws Exception;
 
+    public abstract void clear();
+
 }

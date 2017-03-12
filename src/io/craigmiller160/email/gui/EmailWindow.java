@@ -14,7 +14,11 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static io.craigmiller160.email.EmailTool.EXECUTE_PROP;
+import static io.craigmiller160.email.EmailTool.LOAD_PROP;
+import static io.craigmiller160.email.EmailTool.NEW_PROP;
 import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
+import static io.craigmiller160.email.EmailTool.SAVE_AS_PROP;
+import static io.craigmiller160.email.EmailTool.SAVE_PROP;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
@@ -71,11 +75,20 @@ public class EmailWindow extends JFrame {
 
     private JButton sendEmail;
 
+    private JButton saveConfig;
+    private JButton saveAsConfig;
+    private JButton loadConfig;
+    private JButton newConfig;
+
     private EmailTool controller;
 
     public EmailWindow(EmailTool controller){
         this.controller = controller;
         init();
+    }
+
+    public void clearAllValues(){
+        //TODO finish this
     }
 
     private void init(){
@@ -91,7 +104,9 @@ public class EmailWindow extends JFrame {
         JPanel sendFromPanel = buildFromPanel();
         JPanel messagePanel = buildMessagePanel();
         JPanel bottomPanel = bottomPanel();
+        JToolBar toolBar = createToolbar();
 
+        getContentPane().add(toolBar, "dock north");
         getContentPane().add(titleLabel, "dock north");
         getContentPane().add(sendToPanel, "span 3, growx, pushx, wrap");
         getContentPane().add(sendFromPanel, "grow, push");
@@ -99,6 +114,9 @@ public class EmailWindow extends JFrame {
         getContentPane().add(bottomPanel, "span 3, growx, pushx");
 
         ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+
+
 
         pack();
         setLocationRelativeTo(null);
@@ -266,7 +284,6 @@ public class EmailWindow extends JFrame {
     }
 
     private void removeAttachment(ActionEvent event){
-        //TODO remove an attachment here
         int selectedIndex = attachments.getSelectedIndex();
         attachmentModel.remove(selectedIndex);
     }
@@ -278,6 +295,53 @@ public class EmailWindow extends JFrame {
         table.setPreferredScrollableViewportSize(SEND_TO_TABLE_DIMENSION);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return table;
+    }
+
+    private JToolBar createToolbar(){
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+
+        newConfig = new JButton("New");
+        newConfig.setActionCommand(NEW_PROP);
+        newConfig.addActionListener(this::changeConfig);
+        newConfig.setPreferredSize(new Dimension(50,50));
+
+        saveConfig = new JButton("Save");
+        saveConfig.setActionCommand(SAVE_PROP);
+        saveConfig.addActionListener(this::changeConfig);
+        saveConfig.setPreferredSize(new Dimension(50,50));
+
+        saveAsConfig = new JButton("Save As");
+        saveAsConfig.setActionCommand(SAVE_AS_PROP);
+        saveAsConfig.addActionListener(this::changeConfig);
+        saveAsConfig.setPreferredSize(new Dimension(70,50));
+
+        loadConfig = new JButton("Load");
+        loadConfig.setActionCommand(LOAD_PROP);
+        loadConfig.addActionListener(this::changeConfig);
+        loadConfig.setPreferredSize(new Dimension(50,50));
+
+        toolBar.add(newConfig);
+        toolBar.add(loadConfig);
+        toolBar.add(saveConfig);
+        toolBar.add(saveAsConfig);
+
+        return toolBar;
+    }
+
+    private void changeConfig(ActionEvent event){
+        if(NEW_PROP.equals(event.getActionCommand())){
+            controller.actionPerformed(event);
+        }
+        else if(LOAD_PROP.equals(event.getActionCommand())){
+
+        }
+        else if(SAVE_PROP.equals(event.getActionCommand())){
+
+        }
+        else if(SAVE_AS_PROP.equals(event.getActionCommand())){
+
+        }
     }
 
 }

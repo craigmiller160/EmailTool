@@ -70,4 +70,11 @@ public class MessageModel extends AbstractModel {
             throw new Exception("Email is missing subject line");
         }
     }
+
+    @Override
+    public void clear() {
+        setSubject(null);
+        setBody(null);
+        setAttachments(new ArrayList<>());
+    }
 }
