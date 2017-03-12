@@ -28,6 +28,8 @@ import java.util.Optional;
 import static io.craigmiller160.email.gui.SendToListModel.BCC_TITLE;
 import static io.craigmiller160.email.gui.SendToListModel.CC_TITLE;
 import static io.craigmiller160.email.gui.SendToListModel.TO_TITLE;
+import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
+import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PASSWORD_PROP;
 import static io.craigmiller160.email.model.SendFromModel.PORT_PROP;
@@ -124,6 +126,12 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             }
             else if(PASSWORD_PROP.equals(propName)){
                 sendFromModel.setPassword(text);
+            }
+            else if(SUBJECT_PROP.equals(propName)){
+                messageModel.setSubject(text);
+            }
+            else if(BODY_PROP.equals(propName)){
+                messageModel.setBody(text);
             }
         }
         catch(BadLocationException ex){
