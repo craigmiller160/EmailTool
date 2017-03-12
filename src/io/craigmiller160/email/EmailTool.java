@@ -114,6 +114,15 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             this.sendFromModel.clear();
             this.messageModel.clear();
         }
+        else if(LOAD_PROP.equals(event.getActionCommand())){
+            //TODO finish this
+        }
+        else if(SAVE_PROP.equals(event.getActionCommand())){
+            //TODO finish this
+        }
+        else if(SAVE_AS_PROP.equals(event.getActionCommand())){
+            //TODO finish this
+        }
     }
 
     @Override
