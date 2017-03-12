@@ -74,10 +74,10 @@ public class SendFromModel extends AbstractModel{
         if(port == 0){
             throw new Exception("Email is missing SMTP Port");
         }
-        else if(StringUtils.isEmpty(username)){
+        else if(auth && StringUtils.isEmpty(username)){
             throw new Exception("Email needs sending account username");
         }
-        else if(StringUtils.isEmpty(password)){
+        else if(auth && StringUtils.isEmpty(password)){
             throw new Exception("Email needs sending account password");
         }
     }

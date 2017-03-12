@@ -38,11 +38,15 @@ public class Email {
     }
 
     public void send() throws Exception{
-
+        System.out.println("Sending email, please wait...");
+        Properties props = getMailSessionProps();
     }
 
     private Properties getMailSessionProps(){
         Properties props = System.getProperties();
+        props.put(MAIL_SMTP_PORT, sendFromModel.getPort());
+        props.put(MAIL_SMTP_AUTH, sendFromModel.isAuth());
+        props.put(MAIL_STARTTLS_ENABLE, sendFromModel.isStartTLS());
         return props;
     }
 

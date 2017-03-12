@@ -113,10 +113,12 @@ public class EmailWindow extends JFrame {
         username = new JTextField();
         username.getDocument().putProperty(PROP_NAME_PROP, USERNAME_PROP);
         username.getDocument().addDocumentListener(controller);
+        username.setEnabled(false);
 
         password = new JPasswordField();
         password.getDocument().putProperty(PROP_NAME_PROP, PASSWORD_PROP);
         password.getDocument().addDocumentListener(controller);
+        password.setEnabled(false);
 
         port = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
         port.setName(PORT_PROP);
@@ -125,23 +127,37 @@ public class EmailWindow extends JFrame {
         auth = new JCheckBox("Use Auth");
         auth.setName(AUTH_PROP);
         auth.addItemListener(controller);
+        auth.addItemListener(this::enableCredentials);
 
         startTLS = new JCheckBox("Start TLS");
         startTLS.setName(START_TLS_PROP);
         startTLS.addItemListener(controller);
 
-        fromPanel.add(usernameLabel, "");
-        fromPanel.add(username, "growx, pushx, wrap");
-        fromPanel.add(passwordLabel, "");
-        fromPanel.add(password, "growx, pushx, wrap");
         fromPanel.add(portLabel, "");
         fromPanel.add(port, "growx, pushx, wrap");
         fromPanel.add(auth, "skip 1, growx, pushx, wrap");
         fromPanel.add(startTLS, "skip 1, growx, pushx, wrap");
+        fromPanel.add(usernameLabel, "");
+        fromPanel.add(username, "growx, pushx, wrap");
+        fromPanel.add(passwordLabel, "");
+        fromPanel.add(password, "growx, pushx, wrap");
 
         fromPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Send From"));
 
         return fromPanel;
+    }
+
+    private void enableCredentials(ItemEvent event){
+        if(event.getStateChange() == ItemEvent.SELECTED){
+            username.setEnabled(true);
+            password.setEnabled(true);
+        }
+        else{
+            username.setText("");
+            password.setText("");
+            username.setEnabled(false);
+            password.setEnabled(false);
+        }
     }
 
     private JPanel bottomPanel(){
