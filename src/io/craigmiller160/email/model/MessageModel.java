@@ -86,6 +86,10 @@ public class MessageModel extends AbstractModel {
         }
     }
 
+    public void clearAttachments(){
+        setAttachments(new ArrayList<>());
+    }
+
     @Override
     public void clear() {
         setSubject(null);

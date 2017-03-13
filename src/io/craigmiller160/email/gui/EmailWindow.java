@@ -25,6 +25,9 @@ import static io.craigmiller160.email.EmailTool.NEW_PROP;
 import static io.craigmiller160.email.EmailTool.PROP_NAME_PROP;
 import static io.craigmiller160.email.EmailTool.SAVE_AS_PROP;
 import static io.craigmiller160.email.EmailTool.SAVE_PROP;
+import static io.craigmiller160.email.gui.SendToListModel.BCC_TITLE;
+import static io.craigmiller160.email.gui.SendToListModel.CC_TITLE;
+import static io.craigmiller160.email.gui.SendToListModel.TO_TITLE;
 import static io.craigmiller160.email.model.MessageModel.BODY_PROP;
 import static io.craigmiller160.email.model.MessageModel.SUBJECT_PROP;
 import static io.craigmiller160.email.model.SendFromModel.AUTH_PROP;
@@ -264,7 +267,7 @@ public class EmailWindow extends JFrame {
     private JPanel buildSendToPanel(){
         JPanel sendToPanel = new JPanel(new MigLayout());
 
-        toEmailModel = new SendToListModel(SendToListModel.TO_TITLE);
+        toEmailModel = new SendToListModel(TO_TITLE);
         toEmailModel.addTableModelListener(controller);
         ccEmailModel = new SendToListModel(SendToListModel.CC_TITLE);
         ccEmailModel.addTableModelListener(controller);
@@ -367,13 +370,13 @@ public class EmailWindow extends JFrame {
             }
         }
         else if(REMOVE_ALL_TO_CMD.equals(event.getActionCommand())){
-            toEmailModel.clear();
+            controller.clearSendTo(TO_TITLE);
         }
         else if(REMOVE_ALL_CC_CMD.equals(event.getActionCommand())){
-            ccEmailModel.clear();
+            controller.clearSendTo(CC_TITLE);
         }
         else if(REMOVE_ALL_BCC_CMD.equals(event.getActionCommand())){
-            bccEmailModel.clear();
+            controller.clearSendTo(BCC_TITLE);
         }
     }
 

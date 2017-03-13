@@ -140,6 +140,18 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         }
     }
 
+    public void clearSendTo(String title){
+        if(TO_TITLE.equals(title)){
+            this.sendToModel.clearToEmails();
+        }
+        else if(CC_TITLE.equals(title)){
+            this.sendToModel.clearCCEmails();
+        }
+        else if(BCC_TITLE.equals(title)){
+            this.sendToModel.clearBCCEmails();
+        }
+    }
+
     public void importToEmails(File file){
         try{
             List<String> emails = EmailImporter.importEmails(file);
@@ -309,7 +321,6 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             if(source instanceof SendToListModel){
                 SendToListModel tableModel = (SendToListModel) source;
                 String title = tableModel.getTitle();
-                //TODO the events don't clearly specify the proper operations... can't seem to do a remove-all
                 if(TO_TITLE.equals(title)){
                     if(event.getType() == TableModelEvent.INSERT){
                         sendToModel.addToEmail((String)tableModel.getValueAt(event.getFirstRow(), 0));

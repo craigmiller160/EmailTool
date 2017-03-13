@@ -138,6 +138,18 @@ public class SendToModel extends AbstractModel{
         }
     }
 
+    public void clearToEmails(){
+        setToEmails(new ArrayList<>());
+    }
+
+    public void clearCCEmails(){
+        setCCEmails(new ArrayList<>());
+    }
+
+    public void clearBCCEmails(){
+        setBCCEmails(new ArrayList<>());
+    }
+
     @Override
     public void clear() {
         setToEmails(new ArrayList<>());
