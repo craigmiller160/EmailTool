@@ -125,6 +125,8 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             this.sendToModel.clear();
             this.sendFromModel.clear();
             this.messageModel.clear();
+            this.saveModel.clear();
+            System.out.println("Created new configuration");
         }
     }
 
