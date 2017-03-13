@@ -16,7 +16,7 @@
         <javac srcdir="src" destdir="build/classes" source="1.8" target="1.8" classpathref="classpath" />
     </target>
     <target name="package" depends="compile">
-        <jar basedir="build/classes" destfile="build/email-tool-1.1.jar">
+        <jar basedir="build/classes" destfile="build/email-tool-2.0.jar">
             <zipgroupfileset dir="lib" includes="**/*.jar" />
             <manifest>
                 <attribute name="Built-By" value="Craig Miller" />

@@ -151,9 +151,15 @@ public class PersistConfiguration {
         if(auth){
             expression = xPath.compile(USERNAME_XPATH);
             String username = (String) expression.evaluate(doc, XPathConstants.STRING);
-            sendFromModel.setUsername(StringEscapeUtils.unescapeXml(username));
+            if(!StringUtils.isEmpty(username)){
+                sendFromModel.setUsername(StringEscapeUtils.unescapeXml(username));
+            }
 
-            //TODO not doing anything with password yet
+            expression = xPath.compile(PASSWORD_XPATH);
+            String password = (String) expression.evaluate(doc, XPathConstants.STRING);
+            if(!StringUtils.isEmpty(password)){
+                sendFromModel.setPassword(StringEscapeUtils.escapeXml10(password));
+            }
         }
     }
 
@@ -217,7 +223,9 @@ public class PersistConfiguration {
             username.setTextContent(StringEscapeUtils.escapeXml10(sendFromModel.getUsername()));
         }
 
-        //TODO not saving password for now
+        if(sendFromModel.isAuth() && !StringUtils.isEmpty(sendFromModel.getPassword())){
+            password.setTextContent(StringEscapeUtils.escapeXml10(sendFromModel.getPassword()));
+        }
     }
 
     private static void appendMessage(MessageModel messageModel, Element root, Document doc){
