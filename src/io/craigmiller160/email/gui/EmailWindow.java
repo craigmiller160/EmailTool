@@ -387,7 +387,11 @@ public class EmailWindow extends JFrame {
             fileChooser.setCurrentDirectory(lastLocation);
         }
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Email Configurations", "emailconfig"));
+        if(!IMPORT_TO_PROP.equals(event.getActionCommand()) && !IMPORT_CC_PROP.equals(event.getActionCommand()) &&
+                !IMPORT_BCC_PROP.equals(event.getActionCommand()) && !ATTACHMENT_CMD.equals(event.getActionCommand())){
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Email Configurations", "emailconfig"));
+        }
+
         int result = -1;
         if(ATTACHMENT_CMD.equals(event.getActionCommand()) || LOAD_PROP.equals(event.getActionCommand()) ||
                 IMPORT_TO_PROP.equals(event.getActionCommand()) || IMPORT_CC_PROP.equals(event.getActionCommand()) ||
