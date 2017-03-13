@@ -77,6 +77,10 @@ public class Email {
         MimeMultipart multipart = new MimeMultipart();
         mimeMessage.setContent(multipart);
 
+        if(!StringUtils.isEmpty(sendFromModel.getUsername())){
+            mimeMessage.setFrom(new InternetAddress(sendFromModel.getUsername()));
+        }
+
         if(!StringUtils.isEmpty(messageModel.getBody())){
             MimeBodyPart bodyPart = new MimeBodyPart();
             bodyPart.setText(messageModel.getBody());

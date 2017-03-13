@@ -309,6 +309,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             if(source instanceof SendToListModel){
                 SendToListModel tableModel = (SendToListModel) source;
                 String title = tableModel.getTitle();
+                //TODO the events don't clearly specify the proper operations... can't seem to do a remove-all
                 if(TO_TITLE.equals(title)){
                     if(event.getType() == TableModelEvent.INSERT){
                         sendToModel.addToEmail((String)tableModel.getValueAt(event.getFirstRow(), 0));

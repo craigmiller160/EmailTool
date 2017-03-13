@@ -155,7 +155,6 @@ public class EmailWindow extends JFrame {
         username = new JTextField();
         username.getDocument().putProperty(PROP_NAME_PROP, USERNAME_PROP);
         username.getDocument().addDocumentListener(controller);
-        username.setEnabled(false);
 
         password = new JPasswordField();
         password.getDocument().putProperty(PROP_NAME_PROP, PASSWORD_PROP);
@@ -197,13 +196,10 @@ public class EmailWindow extends JFrame {
 
     private void enableCredentials(ItemEvent event){
         if(event.getStateChange() == ItemEvent.SELECTED){
-            username.setEnabled(true);
             password.setEnabled(true);
         }
         else{
-            username.setText("");
             password.setText("");
-            username.setEnabled(false);
             password.setEnabled(false);
         }
     }

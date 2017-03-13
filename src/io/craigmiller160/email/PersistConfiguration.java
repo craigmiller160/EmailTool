@@ -148,13 +148,13 @@ public class PersistConfiguration {
         boolean startTLS = (Boolean) expression.evaluate(doc, XPathConstants.BOOLEAN);
         sendFromModel.setStartTLS(startTLS);
 
-        if(auth){
-            expression = xPath.compile(USERNAME_XPATH);
-            String username = (String) expression.evaluate(doc, XPathConstants.STRING);
-            if(!StringUtils.isEmpty(username)){
-                sendFromModel.setUsername(StringEscapeUtils.unescapeXml(username));
-            }
+        expression = xPath.compile(USERNAME_XPATH);
+        String username = (String) expression.evaluate(doc, XPathConstants.STRING);
+        if(!StringUtils.isEmpty(username)){
+            sendFromModel.setUsername(StringEscapeUtils.unescapeXml(username));
+        }
 
+        if(auth){
             expression = xPath.compile(PASSWORD_XPATH);
             String password = (String) expression.evaluate(doc, XPathConstants.STRING);
             if(!StringUtils.isEmpty(password)){
@@ -219,7 +219,7 @@ public class PersistConfiguration {
         Element password = doc.createElement(PASSWORD_ELEMENT);
         from.appendChild(password);
 
-        if(sendFromModel.isAuth() && !StringUtils.isEmpty(sendFromModel.getUsername())){
+        if(!StringUtils.isEmpty(sendFromModel.getUsername())){
             username.setTextContent(StringEscapeUtils.escapeXml10(sendFromModel.getUsername()));
         }
 
