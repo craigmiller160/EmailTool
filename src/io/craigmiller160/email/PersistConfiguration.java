@@ -286,7 +286,7 @@ public class PersistConfiguration {
         }
 
         if(sendToModel.getBCCEmails().size() > 0){
-            for(String s : sendToModel.getCCEmails()){
+            for(String s : sendToModel.getBCCEmails()){
                 Element email = doc.createElement(EMAIL_ELEMENT);
                 email.setTextContent(StringEscapeUtils.escapeXml10(s));
                 bcc.appendChild(email);
