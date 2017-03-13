@@ -47,6 +47,12 @@ public class EmailWindow extends JFrame {
     private static final Dimension SEND_TO_TABLE_DIMENSION = new Dimension(200, 200);
     private static final String ATTACHMENT_CMD = "AttachmentCmd";
     private static final String REMOVE_ATTACHMENT_CMD = "RemoveAttachmentCmd";
+    private static final String REMOVE_TO_CMD = "RemoveTo";
+    private static final String REMOVE_ALL_TO_CMD = "RemoveAllTo";
+    private static final String REMOVE_CC_CMD = "RemoveCC";
+    private static final String REMOVE_ALL_CC_CMD = "RemoveAllCC";
+    private static final String REMOVE_BCC_CMD = "RemoveBCC";
+    private static final String REMOVE_ALL_BCC_CMD = "RemoveAllBCC";
 
     /*
      * Options:
@@ -67,6 +73,12 @@ public class EmailWindow extends JFrame {
     private JButton importTo;
     private JButton importCC;
     private JButton importBCC;
+    private JButton removeTo;
+    private JButton removeCC;
+    private JButton removeBCC;
+    private JButton removeAllTo;
+    private JButton removeAllCC;
+    private JButton removeAllBCC;
 
     private JTextField username;
     private JPasswordField password;
@@ -279,6 +291,31 @@ public class EmailWindow extends JFrame {
         importBCC.setActionCommand(IMPORT_BCC_PROP);
         importBCC.addActionListener(this::openFileChooser);
 
+        removeTo = new JButton("Remove");
+        removeTo.setActionCommand(REMOVE_TO_CMD);
+        removeTo.addActionListener(this::removeRecipients);
+
+        removeCC = new JButton("Remove");
+        removeCC.setActionCommand(REMOVE_CC_CMD);
+        removeCC.addActionListener(this::removeRecipients);
+
+        removeBCC = new JButton("Remove");
+        removeBCC.setActionCommand(REMOVE_BCC_CMD);
+        removeBCC.addActionListener(this::removeRecipients);
+
+        removeAllTo = new JButton("Clear");
+        removeAllTo.setActionCommand(REMOVE_ALL_TO_CMD);
+        removeAllTo.addActionListener(this::removeRecipients);
+
+        removeAllCC = new JButton("Clear");
+        removeAllCC.setActionCommand(REMOVE_ALL_CC_CMD);
+        removeAllCC.addActionListener(this::removeRecipients);
+
+        removeAllBCC = new JButton("Clear");
+        removeAllBCC.setActionCommand(REMOVE_ALL_BCC_CMD);
+        removeAllBCC.addActionListener(this::removeRecipients);
+
+
         JScrollPane toEmailScroll = new JScrollPane(toEmailList);
         JScrollPane ccEmailScroll = new JScrollPane(ccEmailList);
         JScrollPane bccEmailScroll = new JScrollPane(bccEmailList);
@@ -288,13 +325,22 @@ public class EmailWindow extends JFrame {
         JPanel bccPanel = new JPanel(new MigLayout());
 
         toPanel.add(toEmailScroll, "growx, pushx, wrap");
-        toPanel.add(importTo);
+        toPanel.add(importTo, "split 3, growx, pushx");
+        toPanel.add(removeTo, "growx, pushx");
+        toPanel.add(removeAllTo, "growx, pushx");
+        toPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         ccPanel.add(ccEmailScroll, "growx, pushx, wrap");
-        ccPanel.add(importCC);
+        ccPanel.add(importCC, "split 3, growx, pushx");
+        ccPanel.add(removeCC, "growx, pushx");
+        ccPanel.add(removeAllCC, "growx, pushx");
+        ccPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         bccPanel.add(bccEmailScroll, "growx, pushx, wrap");
-        bccPanel.add(importBCC);
+        bccPanel.add(importBCC, "split 3, growx, pushx");
+        bccPanel.add(removeBCC, "growx, pushx");
+        bccPanel.add(removeAllBCC, "growx, pushx");
+        bccPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         sendToPanel.add(toPanel, "growx, pushx");
         sendToPanel.add(ccPanel, "growx, pushx");
@@ -303,6 +349,36 @@ public class EmailWindow extends JFrame {
         sendToPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Send To"));
 
         return sendToPanel;
+    }
+
+    private void removeRecipients(ActionEvent event){
+        if(REMOVE_TO_CMD.equals(event.getActionCommand())){
+            int selected = toEmailList.getSelectedRow();
+            if(selected >= 0 && selected < toEmailModel.getRowCount() - 1){
+                toEmailModel.setValueAt(null, selected, 0);
+            }
+        }
+        else if(REMOVE_CC_CMD.equals(event.getActionCommand())){
+            int selected = ccEmailList.getSelectedRow();
+            if(selected >= 0 && selected < ccEmailModel.getRowCount() - 1){
+                ccEmailModel.setValueAt(null, selected, 0);
+            }
+        }
+        else if(REMOVE_BCC_CMD.equals(event.getActionCommand())){
+            int selected = bccEmailList.getSelectedRow();
+            if(selected >= 0 && selected < bccEmailModel.getRowCount() - 1){
+                bccEmailModel.setValueAt(null, selected, 0);
+            }
+        }
+        else if(REMOVE_ALL_TO_CMD.equals(event.getActionCommand())){
+            toEmailModel.clear();
+        }
+        else if(REMOVE_ALL_CC_CMD.equals(event.getActionCommand())){
+            ccEmailModel.clear();
+        }
+        else if(REMOVE_ALL_BCC_CMD.equals(event.getActionCommand())){
+            bccEmailModel.clear();
+        }
     }
 
     private void openFileChooser(ActionEvent event){

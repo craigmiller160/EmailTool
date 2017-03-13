@@ -32,6 +32,11 @@ public class SendToListModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public void clear(){
+        this.values = new ArrayList<>();
+        fireTableDataChanged();
+    }
+
     @Override
     public int getRowCount() {
         return values.size() + 1;
