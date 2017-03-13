@@ -1,5 +1,5 @@
 # Properties with my email credentials
-/resources/email.properties
+/io/craigmiller160/email/email.properties
 
 # IntelliJ files
 /out

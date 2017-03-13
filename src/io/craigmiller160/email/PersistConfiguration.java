@@ -3,6 +3,7 @@ package io.craigmiller160.email;
 import io.craigmiller160.email.model.MessageModel;
 import io.craigmiller160.email.model.SendFromModel;
 import io.craigmiller160.email.model.SendToModel;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -20,8 +21,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 
 /**
  * Created by craig on 3/12/17.
@@ -61,7 +66,10 @@ public class PersistConfiguration {
     private static final String ATTACHMENTS_XPATH = String.format("/%s/%s/%s/%s", ROOT_ELEMENT, MESSAGE_ELEMENT, ATTACHMENTS_ELEMENT, ATTACHMENT_ELEMENT);
 
     public static void loadConfig(File file, SendToModel sendToModel, SendFromModel sendFromModel, MessageModel messageModel) throws Exception{
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+        byte[] encrypted = IOUtils.toByteArray(new FileInputStream(file));
+        byte[] decrypted = CryptoUtil.getInstance().decryptData(encrypted);
+
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(decrypted));
         XPath xPath = XPathFactory.newInstance().newXPath();
 
         parseSendTo(sendToModel, doc, xPath);
@@ -83,8 +91,16 @@ public class PersistConfiguration {
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new FileOutputStream(file));
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        StreamResult result = new StreamResult(byteStream);
         transformer.transform(source, result);
+
+        byte[] bytes = byteStream.toByteArray();
+        byte[] encrypted = CryptoUtil.getInstance().encryptData(bytes);
+        try(FileOutputStream outputStream = new FileOutputStream(file)){
+            outputStream.write(encrypted);
+        }
+
         System.out.println("Configuration saved: " + file.getAbsolutePath());
     }
 

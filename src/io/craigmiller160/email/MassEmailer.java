@@ -35,7 +35,7 @@ public class MassEmailer {
 
     public static void main(String[] args) throws Exception{
         applicationProps = new Properties();
-        applicationProps.load(MassEmailer.class.getClassLoader().getResourceAsStream("email.properties"));
+        applicationProps.load(MassEmailer.class.getClassLoader().getResourceAsStream("io/craigmiller160/email/email.properties"));
         introPrompts();
         summarizeEmail();
 

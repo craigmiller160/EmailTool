@@ -7,6 +7,7 @@ import io.craigmiller160.email.model.SaveModel;
 import io.craigmiller160.email.model.SendFromModel;
 import io.craigmiller160.email.model.SendToModel;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -107,6 +108,14 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
         this.saveModel.addPropertyChangeListener(this);
 
         this.view = new EmailWindow(this);
+
+        try{
+            CryptoUtil.getInstance();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Unable to configure encryption util, cannot save/load configurations", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -193,6 +202,12 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
                 JOptionPane.showMessageDialog(view, "Cannot find file to save configuration to", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+        }
+
+        String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+        if(StringUtils.isEmpty(extension) || !SaveModel.EXTENSION.equals(extension)){
+            String fileWithExt = FilenameUtils.getFullPath(file.getAbsolutePath()) + File.separator + FilenameUtils.getBaseName(file.getAbsolutePath()) + "." + SaveModel.EXTENSION;
+            file = new File(fileWithExt);
         }
 
         try{
