@@ -124,6 +124,7 @@ public class EmailTool implements ActionListener, DocumentListener, TableModelLi
             try{
                 Email email = Email.newEmail(sendFromModel, sendToModel, messageModel);
                 email.send();
+                JOptionPane.showMessageDialog(view, "Email was sent successfully to all recipients", "Email Sent", JOptionPane.INFORMATION_MESSAGE);
             }
             catch(Exception ex){
                 JOptionPane.showMessageDialog(view, "Unable to send email: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
