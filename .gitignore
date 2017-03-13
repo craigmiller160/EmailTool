@@ -1,5 +1,6 @@
-# Properties with my email credentials
-/io/craigmiller160/email/email.properties
+# Encryption credentials
+resources/io/craigmiller160/email/email.properties
+resources/io/craigmiller160/email/keystore.jceks
 
 # IntelliJ files
 /out
