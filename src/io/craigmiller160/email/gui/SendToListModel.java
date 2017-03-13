@@ -56,7 +56,7 @@ public class SendToListModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if(rowIndex == values.size()){
+        if(rowIndex == values.size() && aValue != null && !((String) aValue).trim().isEmpty()){
             values.add((String) aValue);
             fireTableRowsInserted(rowIndex, rowIndex);
         }

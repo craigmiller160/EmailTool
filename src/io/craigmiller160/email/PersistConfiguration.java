@@ -271,25 +271,32 @@ public class PersistConfiguration {
 
         if(sendToModel.getToEmails().size() > 0){
             for(String s : sendToModel.getToEmails()){
-                Element email = doc.createElement(EMAIL_ELEMENT);
-                email.setTextContent(StringEscapeUtils.escapeXml10(s));
-                to.appendChild(email);
+                if(!s.trim().isEmpty()){
+                    Element email = doc.createElement(EMAIL_ELEMENT);
+                    email.setTextContent(StringEscapeUtils.escapeXml10(s));
+                    to.appendChild(email);
+                }
             }
         }
 
         if(sendToModel.getCCEmails().size() > 0){
             for(String s : sendToModel.getCCEmails()){
-                Element email = doc.createElement(EMAIL_ELEMENT);
-                email.setTextContent(StringEscapeUtils.escapeXml10(s));
-                cc.appendChild(email);
+                if(!s.trim().isEmpty()){
+                    Element email = doc.createElement(EMAIL_ELEMENT);
+                    email.setTextContent(StringEscapeUtils.escapeXml10(s));
+                    cc.appendChild(email);
+                }
             }
         }
 
         if(sendToModel.getBCCEmails().size() > 0){
             for(String s : sendToModel.getBCCEmails()){
-                Element email = doc.createElement(EMAIL_ELEMENT);
-                email.setTextContent(StringEscapeUtils.escapeXml10(s));
-                bcc.appendChild(email);
+                if(!s.trim().isEmpty()){
+                    Element email = doc.createElement(EMAIL_ELEMENT);
+                    email.setTextContent(StringEscapeUtils.escapeXml10(s));
+                    bcc.appendChild(email);
+                }
+
             }
         }
     }
