@@ -231,6 +231,8 @@ public class EmailWindow extends JFrame {
         subject.getDocument().addDocumentListener(controller);
 
         body = new JTextArea(10, 50);
+        body.setLineWrap(true);
+        body.setWrapStyleWord(true);
         body.getDocument().putProperty(PROP_NAME_PROP, BODY_PROP);
         body.getDocument().addDocumentListener(controller);
 
